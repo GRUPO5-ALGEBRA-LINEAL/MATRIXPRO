@@ -1,6 +1,6 @@
 
 /* ==================================================
-   MATRIXCALC - LÓGICA PRINCIPAL
+   MATRIZCALC - LÓGICA PRINCIPAL
    ================================================== */
 
 "use strict";

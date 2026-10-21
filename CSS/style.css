@@ -1,5 +1,5 @@
 
-/* Sección Acerca */
+/* Diseño de la sección Acerca */
 #acerca {
     width: min(900px, 92%);
     padding: 48px 0 90px;
@@ -60,6 +60,7 @@
     margin: 0 0 12px;
     color: #e0e8f5;
     line-height: 1.6;
+    overflow-wrap: anywhere;
 }
 
 .informacion-acerca p:last-child {
@@ -71,7 +72,7 @@
 }
 
 .integrantes-acerca {
-    margin-top: 28px;
+    margin-top: 24px;
     padding: 20px;
     background: #101d30;
     border: 1px solid #2a3b53;
@@ -87,6 +88,7 @@
 .integrantes-acerca p {
     margin: 8px 0;
     color: #e0e8f5;
+    overflow-wrap: anywhere;
 }
 
 .logo-acerca {
@@ -106,7 +108,8 @@
         padding: 22px 16px;
     }
 
-    .informacion-acerca {
+    .informacion-acerca,
+    .integrantes-acerca {
         padding: 16px;
     }
 }

@@ -4,219 +4,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MatrixCalc: calculadora de suma y resta de matrices.">
+    <meta name="theme-color" content="#101a2c">
     <title>MatrixCalc | Calculadora de Matrices</title>
     <link rel="stylesheet" href="./CSS/style.css">
     <script src="./JS/script.js" defer></script>
 </head>
 <body>
-    <header class="encabezado">
-        <a href="#inicio" class="marca">
-            <span class="marca-icono">M</span>
-            <span>MatrixCalc</span>
-        </a>
+<header class="header">
+    <a href="#inicio" class="logo" onclick="mostrarSeccion('inicio');return false">
+        <span class="logo-icono">▦</span> MatrixCalc
+    </a>
+    <nav class="menu">
+        <button onclick="mostrarSeccion('inicio')">⌂ Inicio</button>
+        <button onclick="mostrarSeccion('operaciones')">▦ Operaciones</button>
+        <button onclick="mostrarSeccion('tutorial')">▤ Tutorial</button>
+        <button onclick="mostrarSeccion('acerca')">ⓘ Acerca</button>
+    </nav>
+</header>
 
-        <nav class="navegacion">
-            <a href="#inicio">Inicio</a>
-            <a href="#operaciones">Operaciones</a>
-            <a href="#tutorial">Tutorial</a>
-            <a href="#acerca">Acerca de</a>
-        </nav>
-    </header>
+<main>
+<section id="inicio" class="seccion activa">
+    <div class="bienvenida">
+        <div class="icono-principal">▦</div>
+        <p class="etiqueta">HERRAMIENTA EDUCATIVA</p>
+        <h1>MatrixCalc</h1>
+        <h2>Calculadora de matrices</h2>
+        <p class="texto-intro">Realiza operaciones de suma y resta de matrices de forma sencilla y consulta el procedimiento paso a paso.</p>
+        <button class="btn-principal" onclick="mostrarSeccion('operaciones')">Comenzar →</button>
+    </div>
+    <div class="tarjetas">
+        <article class="tarjeta">
+            <div class="tarjeta-icono verde">＋</div>
+            <h3>Suma de matrices</h3>
+            <p>Suma los elementos que ocupan la misma posición.</p>
+        </article>
+        <article class="tarjeta">
+            <div class="tarjeta-icono azul">−</div>
+            <h3>Resta de matrices</h3>
+            <p>Resta los elementos correspondientes de cada matriz.</p>
+        </article>
+        <article class="tarjeta">
+            <div class="tarjeta-icono morado">▤</div>
+            <h3>Tutorial</h3>
+            <p>Aprende a utilizar MatrixCalc paso a paso.</p>
+            <button class="enlace-tarjeta" onclick="mostrarSeccion('tutorial')">Ver tutorial →</button>
+        </article>
+    </div>
+</section>
 
-    <main>
-        <section id="inicio" class="seccion inicio">
-            <div class="etiqueta">CÁLCULO MATRICIAL</div>
-            <h1>Calculadora de <span>matrices</span></h1>
-            <p class="descripcion">
-                Realiza operaciones de suma y resta de matrices
-                de manera sencilla, rápida y organizada.
-            </p>
+<section id="operaciones" class="seccion">
+    <div class="titulo-seccion">
+        <p class="etiqueta">CALCULADORA MATEMÁTICA</p>
+        <h1>Operaciones con matrices</h1>
+        <p>Configura las dimensiones para comenzar.</p>
+    </div>
 
-            <a href="#operaciones" class="boton-principal">
-                Comenzar a calcular
-            </a>
-        </section>
+    <div class="panel configuracion-panel">
+        <h2>Configuración</h2>
+        <p class="texto-configuracion">Selecciona el tamaño de las matrices</p>
 
-        <section id="operaciones" class="seccion">
-            <div class="titulo-seccion">
-                <span class="etiqueta">OPERACIONES</span>
-                <h2>Selecciona las dimensiones</h2>
-                <p>Elige el tamaño de las matrices que deseas operar.</p>
+        <div class="opciones-dimensiones">
+            <button type="button" class="tarjeta-dimension seleccionada"
+                onclick="seleccionarDimension(2,2,this)">
+                <span class="icono-dimension">▦</span>
+                <strong>Matriz 2×2</strong>
+                <small>2 filas · 2 columnas</small>
+                <span class="indicador"></span>
+            </button>
+            <button type="button" class="tarjeta-dimension"
+                onclick="seleccionarDimension(3,3,this)">
+                <span class="icono-dimension">▦</span>
+                <strong>Matriz 3×3</strong>
+                <small>3 filas · 3 columnas</small>
+                <span class="indicador"></span>
+            </button>
+            <button type="button" class="tarjeta-dimension"
+                onclick="seleccionarDimension(4,4,this)">
+                <span class="icono-dimension">▦</span>
+                <strong>Matriz 4×4</strong>
+                <small>4 filas · 4 columnas</small>
+                <span class="indicador"></span>
+            </button>
+            <button type="button" class="tarjeta-dimension"
+                onclick="mostrarPersonalizado(this)">
+                <span class="icono-dimension">⚙</span>
+                <strong>Personalizado</strong>
+                <small>Filas y columnas manuales</small>
+                <span class="indicador"></span>
+            </button>
+        </div>
+
+        <div id="configuracionPersonalizada" class="configuracion-personalizada" hidden>
+            <label>Filas
+                <input id="filas" type="number" min="1" max="8" value="2">
+            </label>
+            <label>Columnas
+                <input id="columnas" type="number" min="1" max="8" value="2">
+            </label>
+        </div>
+
+        <p id="mensajeDimension" class="mensaje-dimension">Dimensiones seleccionadas: 2 × 2</p>
+        <button class="btn-principal" onclick="crearMatrices()">▦ Crear matrices</button>
+    </div>
+
+    <div id="mensajeSistema" class="mensaje-sistema" role="status" hidden></div>
+    <div id="contenedorMatrices" class="matrices" hidden></div>
+
+    <div id="botonesOperacion" class="botones-operacion" hidden>
+        <button class="btn-sumar" onclick="sumarMatrices()">＋ Sumar</button>
+        <button class="btn-restar" onclick="restarMatrices()">− Restar</button>
+        <button class="btn-limpiar" onclick="limpiarMatrices()">♲ Limpiar</button>
+    </div>
+
+    <section id="resultado" class="resultado" hidden>
+        <h2>Resultado</h2>
+        <p id="tituloResultado" class="subtitulo-resultado"></p>
+        <div id="matrizResultado"></div>
+    </section>
+
+    <section id="procedimiento" class="procedimiento" hidden>
+        <h2>▤ Procedimiento</h2>
+        <div id="contenidoProcedimiento"></div>
+    </section>
+</section>
+
+<section id="tutorial" class="seccion">
+    <div class="titulo-seccion">
+        <p class="etiqueta">GUÍA DE USUARIO</p>
+        <h1>Tutorial de MatrixCalc</h1>
+        <p>Aprende a utilizar la aplicación en seis pasos.</p>
+    </div>
+    <div class="tutorial-container">
+        <div class="tutorial-imagen">
+            <div id="tutorialVisual" class="tutorial-visual">
+                <span id="tutorialIcono">▦</span>
+                <p>Guía de MatrixCalc</p>
             </div>
+            <img id="imagenTutorial" alt="Ilustración del tutorial" hidden>
+        </div>
+        <div class="progreso-tutorial"><div id="barraProgreso"></div></div>
+        <div class="tutorial-contenido">
+            <span id="numeroPaso">PASO 1 DE 6</span>
+            <h2 id="tituloPaso">Seleccionar dimensiones</h2>
+            <p id="descripcionPaso"></p>
+        </div>
+        <div class="tutorial-botones">
+            <button id="btnAnterior" onclick="pasoAnterior()">← Anterior</button>
+            <button id="btnSiguiente" onclick="siguientePaso()">Siguiente →</button>
+        </div>
+    </div>
+    <div class="panel teoria-panel">
+        <h2>Reglas de las operaciones</h2>
+        <p>Para sumar o restar matrices, ambas deben tener las mismas dimensiones. Se operan los elementos que ocupan la misma fila y columna.</p>
+        <div class="formula">Suma: Cᵢⱼ = Aᵢⱼ + Bᵢⱼ</div>
+        <div class="formula">Resta: Cᵢⱼ = Aᵢⱼ − Bᵢⱼ</div>
+    </div>
+</section>
 
-            <div class="rejilla-dimensiones">
-                <button class="tarjeta-dimension" data-size="2">
-                    <span class="icono-matriz">▦</span>
-                    <strong>Matriz 2 × 2</strong>
-                    <small>4 elementos</small>
-                </button>
+<section id="acerca" class="seccion">
+    <div class="acerca-container">
+        <div class="icono-principal">▦</div>
+        <p class="etiqueta">PROYECTO UNIVERSITARIO</p>
+        <h1>Acerca de MatrixCalc</h1>
+        <p>Aplicación web educativa para practicar suma y resta de matrices de Álgebra Lineal.</p>
+        <div class="informacion">
+            <p><strong>Universidad:</strong> Universidad Mariano Gálvez de Guatemala</p>
+            <p><strong>Facultad:</strong> Ingeniería en Sistemas de Información y Ciencias de la Computación</p>
+            <p><strong>Curso:</strong> Álgebra Lineal</p>
+            <p><strong>Tecnologías:</strong> HTML, CSS y JavaScript</p>
+        </div>
+    </div>
+</section>
+</main>
 
-                <button class="tarjeta-dimension" data-size="3">
-                    <span class="icono-matriz">▦</span>
-                    <strong>Matriz 3 × 3</strong>
-                    <small>9 elementos</small>
-                </button>
-
-                <button class="tarjeta-dimension" data-size="4">
-                    <span class="icono-matriz">▦</span>
-                    <strong>Matriz 4 × 4</strong>
-                    <small>16 elementos</small>
-                </button>
-
-                <button class="tarjeta-dimension" data-size="custom">
-                    <span class="icono-matriz">＋</span>
-                    <strong>Personalizada</strong>
-                    <small>Elige filas y columnas</small>
-                </button>
-            </div>
-
-            <div id="personalizada" class="personalizada oculto">
-                <h3>Dimensiones personalizadas</h3>
-                <div class="campos-dimensiones">
-                    <label>
-                        Filas
-                        <input type="number" id="filas" min="1" max="8" value="2">
-                    </label>
-                    <label>
-                        Columnas
-                        <input type="number" id="columnas" min="1" max="8" value="2">
-                    </label>
-                </div>
-                <button id="crearPersonalizada" class="boton-principal">
-                    Crear matrices
-                </button>
-            </div>
-
-            <p id="estadoSeleccion" class="estado" aria-live="polite">
-                Selecciona una dimensión para comenzar.
-            </p>
-
-            <div id="areaMatrices" class="area-matrices oculto">
-                <div id="contenedorA" class="panel-matriz">
-                    <h3>Matriz A</h3>
-                    <div id="matrizA" class="matriz"></div>
-                </div>
-
-                <div id="contenedorB" class="panel-matriz">
-                    <h3>Matriz B</h3>
-                    <div id="matrizB" class="matriz"></div>
-                </div>
-            </div>
-
-            <div id="botonesOperacion" class="acciones oculto">
-                <button id="sumar" class="boton-principal">A + B · Sumar</button>
-                <button id="restar" class="boton-secundario">A − B · Restar</button>
-                <button id="limpiar" class="boton-secundario">Limpiar</button>
-            </div>
-
-            <div id="panelResultado" class="panel-resultado oculto" aria-live="polite">
-                <h3 id="tituloResultado">Resultado</h3>
-                <div id="resultado" class="matriz matriz-resultado"></div>
-                <h4>Procedimiento</h4>
-                <div id="procedimiento" class="procedimiento"></div>
-            </div>
-        </section>
-
-        <section id="tutorial" class="seccion">
-            <div class="titulo-seccion">
-                <span class="etiqueta">GUÍA DE USO</span>
-                <h2>¿Cómo utilizar MatrixCalc?</h2>
-                <p>Sigue estos pasos para realizar tus operaciones.</p>
-            </div>
-
-            <div class="rejilla-tutorial">
-                <article class="paso-tutorial">
-                    <span class="numero-paso">01</span>
-                    <h3>Selecciona el tamaño</h3>
-                    <p>Elige una matriz de 2 × 2, 3 × 3, 4 × 4 o define dimensiones personalizadas.</p>
-                </article>
-
-                <article class="paso-tutorial">
-                    <span class="numero-paso">02</span>
-                    <h3>Ingresa los valores</h3>
-                    <p>Escribe los números en las casillas de la matriz A y la matriz B.</p>
-                </article>
-
-                <article class="paso-tutorial">
-                    <span class="numero-paso">03</span>
-                    <h3>Elige la operación</h3>
-                    <p>Pulsa sumar o restar. Las dos matrices deben tener las mismas dimensiones.</p>
-                </article>
-
-                <article class="paso-tutorial">
-                    <span class="numero-paso">04</span>
-                    <h3>Revisa el resultado</h3>
-                    <p>Consulta la matriz resultante y el procedimiento de cada operación.</p>
-                </article>
-            </div>
-
-            <div class="nota-tutorial">
-                <strong>Recuerda:</strong> la suma y la resta se realizan
-                elemento por elemento, en la misma posición.
-            </div>
-        </section>
-
-        <section id="acerca" class="seccion">
-            <div class="titulo-seccion">
-                <span class="etiqueta">NUESTRO PROYECTO</span>
-                <h2>Acerca de MatrixCalc</h2>
-                <p>
-                    Aplicación para practicar operaciones básicas
-                    con matrices de forma interactiva.
-                </p>
-            </div>
-
-            <div class="tarjeta-universidad">
-                <img
-                    src="./IMG/logo-umg.png"
-                    alt="Logo de la Universidad Mariano Gálvez de Guatemala"
-                    class="logo-umg"
-                    onerror="this.style.display='none'"
-                >
-
-                <h3>Universidad Mariano Gálvez de Guatemala</h3>
-                <p>Facultad de Ingeniería en Sistemas de Información y Ciencias de la Computación</p>
-                <p class="carrera">Ingeniería en Sistemas</p>
-            </div>
-
-            <div class="desarrolladores">
-                <h2>Desarrolladores</h2>
-                <p class="subtitulo-desarrolladores">
-                    Integrantes del proyecto MatrixCalc
-                </p>
-
-                <div class="rejilla-integrantes">
-                    <article class="tarjeta-integrante">
-                        <div class="avatar-integrante">👨‍💻</div>
-                        <h3>Nombre del integrante 1</h3>
-                        <p>Desarrollador</p>
-                    </article>
-
-                    <article class="tarjeta-integrante">
-                        <div class="avatar-integrante">👨‍💻</div>
-                        <h3>Nombre del integrante 2</h3>
-                        <p>Desarrollador</p>
-                    </article>
-
-                    <article class="tarjeta-integrante">
-                        <div class="avatar-integrante">👨‍💻</div>
-                        <h3>Nombre del integrante 3</h3>
-                        <p>Desarrollador</p>
-                    </article>
-                </div>
-
-                <p class="aviso-nombres">
-                    Sustituye los nombres de ejemplo por los nombres
-                    completos de los integrantes del equipo.
-                </p>
-            </div>
-        </section>
-    </main>
-
-    <footer class="pie-pagina">
-        <p>MatrixCalc · Proyecto académico de Ingeniería en Sistemas</p>
-        <p>Universidad Mariano Gálvez de Guatemala</p>
-    </footer>
+<footer><p>MatrixCalc · Proyecto educativo de Álgebra Lineal</p></footer>
 </body>
 </html>

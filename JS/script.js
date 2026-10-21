@@ -1,612 +1,493 @@
-/* =========================================================
-   MATRIXCALC
-   JavaScript principal
-   ========================================================= */
 
+/* ==================================================
+   MATRIXCALC - LÓGICA PRINCIPAL
+   ================================================== */
 
-/* ==================== NAVEGACIÓN ==================== */
+"use strict";
 
-function mostrarSeccion(nombreSeccion) {
+let filas = 2;
+let columnas = 2;
+let dimensionPersonalizada = false;
+let pasoActual = 1;
 
-    const secciones =
-        document.querySelectorAll(".seccion");
+/* ==================================================
+   NAVEGACIÓN
+   ================================================== */
 
-
-    secciones.forEach(function(seccion) {
-
+function mostrarSeccion(nombre) {
+    document.querySelectorAll(".seccion").forEach(function(seccion) {
         seccion.classList.remove("activa");
-
     });
 
+    const destino = document.getElementById(nombre);
 
-    const seccionSeleccionada =
-        document.getElementById(nombreSeccion);
-
-
-    if (seccionSeleccionada) {
-
-        seccionSeleccionada.classList.add("activa");
-
+    if (destino) {
+        destino.classList.add("activa");
     }
-
 
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
-
 }
 
+/* ==================================================
+   MENSAJES
+   ================================================== */
 
-/* ==================== VARIABLES ==================== */
+function mostrarMensaje(mensaje, esError = false) {
+    const elemento = document.getElementById("mensajeSistema");
 
-let filas = 2;
+    elemento.textContent = mensaje;
+    elemento.classList.toggle("error", esError);
+    elemento.hidden = false;
+}
 
-let columnas = 2;
+function ocultarMensaje() {
+    const elemento = document.getElementById("mensajeSistema");
 
+    elemento.textContent = "";
+    elemento.classList.remove("error");
+    elemento.hidden = true;
+}
 
-/* ==================== CREAR MATRICES ==================== */
+/* ==================================================
+   SELECCIÓN DE DIMENSIONES
+   ================================================== */
+
+function seleccionarDimension(f, c, boton) {
+    filas = f;
+    columnas = c;
+    dimensionPersonalizada = false;
+
+    document.getElementById("filas").value = f;
+    document.getElementById("columnas").value = c;
+
+    document.getElementById("configuracionPersonalizada").hidden = true;
+
+    document.querySelectorAll(".tarjeta-dimension").forEach(function(tarjeta) {
+        tarjeta.classList.remove("seleccionada");
+    });
+
+    boton.classList.add("seleccionada");
+
+    document.getElementById("mensajeDimension").textContent =
+        `Dimensiones seleccionadas: ${f} × ${c}`;
+
+    ocultarMensaje();
+}
+
+function mostrarPersonalizado(boton) {
+    dimensionPersonalizada = true;
+
+    document.querySelectorAll(".tarjeta-dimension").forEach(function(tarjeta) {
+        tarjeta.classList.remove("seleccionada");
+    });
+
+    boton.classList.add("seleccionada");
+
+    document.getElementById("configuracionPersonalizada").hidden = false;
+
+    document.getElementById("mensajeDimension").textContent =
+        "Selecciona entre 1 y 8 filas y columnas.";
+
+    ocultarMensaje();
+}
+
+/* ==================================================
+   CREAR MATRICES
+   ================================================== */
 
 function crearMatrices() {
+    ocultarMensaje();
 
-    filas = parseInt(
-        document.getElementById("filas").value
-    );
+    if (dimensionPersonalizada) {
+        filas = Number(document.getElementById("filas").value);
+        columnas = Number(document.getElementById("columnas").value);
+    }
 
-
-    columnas = parseInt(
-        document.getElementById("columnas").value
-    );
-
-
-    const contenedor =
-        document.getElementById(
-            "contenedorMatrices"
+    if (
+        !Number.isInteger(filas) ||
+        !Number.isInteger(columnas) ||
+        filas < 1 || filas > 8 ||
+        columnas < 1 || columnas > 8
+    ) {
+        mostrarMensaje(
+            "Ingresa un número de filas y columnas entre 1 y 8.",
+            true
         );
+        return;
+    }
 
+    const contenedor = document.getElementById("contenedorMatrices");
+    contenedor.replaceChildren();
 
-    contenedor.innerHTML = "";
+    crearMatriz(contenedor, "A");
+    crearMatriz(contenedor, "B");
 
+    contenedor.hidden = false;
 
-   crearMatriz(contenedor, "A");
-crearMatriz(contenedor, "B");
+    document.getElementById("botonesOperacion").hidden = false;
+    document.getElementById("resultado").hidden = true;
+    document.getElementById("procedimiento").hidden = true;
 
-// Mostrar los botones al crear las matrices
-document.getElementById("botonesOperacion").hidden = false;
+    document.getElementById("matrizResultado").replaceChildren();
+    document.getElementById("contenidoProcedimiento").replaceChildren();
 
-document.getElementById("resultado").style.display = "block";
-document.getElementById("procedimiento").style.display = "block";
+    document.getElementById("mensajeDimension").textContent =
+        `Matrices listas: ${filas} × ${columnas}`;
 
+    mostrarMensaje(
+        "Matrices creadas. Ingresa los valores y selecciona una operación."
+    );
+
+    mostrarSeccion("operaciones");
+
+    contenedor.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
-
-/* ==================== CREAR UNA MATRIZ ==================== */
-
 function crearMatriz(contenedor, nombre) {
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "matriz-card";
 
-    const tarjeta =
-        document.createElement("div");
-
-
-    tarjeta.className =
-        "matriz-card";
-
-
-    const titulo =
-        document.createElement("h2");
-
-
-    titulo.textContent =
-        "Matriz " + nombre;
-
-
+    const titulo = document.createElement("h2");
+    titulo.textContent = `Matriz ${nombre}`;
     tarjeta.appendChild(titulo);
 
+    const matriz = document.createElement("div");
+    matriz.className = "matriz";
+    matriz.style.gridTemplateColumns = `repeat(${columnas}, max-content)`;
 
-    const matriz =
-        document.createElement("div");
-
-
-    matriz.className =
-        "matriz";
-
-
-    matriz.style.gridTemplateColumns =
-        `repeat(${columnas}, 65px)`;
-
-
-    for (
-        let i = 0;
-        i < filas;
-        i++
-    ) {
-
-        for (
-            let j = 0;
-            j < columnas;
-            j++
-        ) {
-
-            const input =
-                document.createElement(
-                    "input"
-                );
-
+    for (let i = 0; i < filas; i++) {
+        for (let j = 0; j < columnas; j++) {
+            const input = document.createElement("input");
 
             input.type = "number";
-
-
-            input.value = "0";
-
-
-            input.id =
-                `matriz${nombre}-${i}-${j}`;
-
-
+            input.step = "any";
+            input.inputMode = "decimal";
+            input.id = `matriz${nombre}-${i}-${j}`;
             input.setAttribute(
                 "aria-label",
                 `Matriz ${nombre}, fila ${i + 1}, columna ${j + 1}`
             );
-
+            input.placeholder = "0";
 
             matriz.appendChild(input);
-
         }
-
     }
-
 
     tarjeta.appendChild(matriz);
-
-
     contenedor.appendChild(tarjeta);
-
 }
 
-
-/* ==================== OBTENER MATRIZ ==================== */
+/* ==================================================
+   LEER Y VALIDAR MATRICES
+   ================================================== */
 
 function obtenerMatriz(nombre) {
-
     const matriz = [];
 
-
-    for (
-        let i = 0;
-        i < filas;
-        i++
-    ) {
-
+    for (let i = 0; i < filas; i++) {
         matriz[i] = [];
 
+        for (let j = 0; j < columnas; j++) {
+            const input = document.getElementById(
+                `matriz${nombre}-${i}-${j}`
+            );
 
-        for (
-            let j = 0;
-            j < columnas;
-            j++
-        ) {
+            if (!input || input.value.trim() === "") {
+                if (input) {
+                    input.focus();
+                }
 
-            const input =
-                document.getElementById(
-                    `matriz${nombre}-${i}-${j}`
+                throw new Error(
+                    `Completa la celda (${i + 1}, ${j + 1}) de la Matriz ${nombre}.`
                 );
+            }
 
+            const valor = Number(input.value);
 
-            matriz[i][j] =
-                Number(input.value);
+            if (!Number.isFinite(valor)) {
+                input.focus();
+                throw new Error(
+                    `El valor de la celda (${i + 1}, ${j + 1}) de la Matriz ${nombre} no es válido.`
+                );
+            }
 
+            matriz[i][j] = valor;
         }
-
     }
-
 
     return matriz;
-
 }
 
-
-/* ==================== MOSTRAR RESULTADO ==================== */
-
-function mostrarResultado(matriz) {
-
-    const contenedor =
-        document.getElementById(
-            "matrizResultado"
-        );
-
-
-    contenedor.innerHTML = "";
-
-
-    const tabla =
-        document.createElement("div");
-
-
-    tabla.className =
-        "matriz-resultado";
-
-
-    tabla.style.gridTemplateColumns =
-        `repeat(${columnas}, 65px)`;
-
-
-    for (
-        let i = 0;
-        i < filas;
-        i++
-    ) {
-
-        for (
-            let j = 0;
-            j < columnas;
-            j++
-        ) {
-
-            const celda =
-                document.createElement(
-                    "div"
-                );
-
-
-            celda.className =
-                "resultado-celda";
-
-
-            celda.textContent =
-                matriz[i][j];
-
-
-            tabla.appendChild(celda);
-
-        }
-
-    }
-
-
-    contenedor.appendChild(tabla);
-
-}
-
-
-/* ==================== SUMA ==================== */
+/* ==================================================
+   EJECUTAR OPERACIONES
+   ================================================== */
 
 function sumarMatrices() {
-
-    const A =
-        obtenerMatriz("A");
-
-
-    const B =
-        obtenerMatriz("B");
-
-
-    const resultado = [];
-
-
-    for (
-        let i = 0;
-        i < filas;
-        i++
-    ) {
-
-        resultado[i] = [];
-
-
-        for (
-            let j = 0;
-            j < columnas;
-            j++
-        ) {
-
-            resultado[i][j] =
-                A[i][j] + B[i][j];
-
-        }
-
-    }
-
-
-    mostrarResultado(resultado);
-
-
-    mostrarProcedimiento(
-        A,
-        B,
-        resultado,
-        "+"
-    );
-
+    ejecutarOperacion("+");
 }
-
-
-/* ==================== RESTA ==================== */
 
 function restarMatrices() {
-
-    const A =
-        obtenerMatriz("A");
-
-
-    const B =
-        obtenerMatriz("B");
-
-
-    const resultado = [];
-
-
-    for (
-        let i = 0;
-        i < filas;
-        i++
-    ) {
-
-        resultado[i] = [];
-
-
-        for (
-            let j = 0;
-            j < columnas;
-            j++
-        ) {
-
-            resultado[i][j] =
-                A[i][j] - B[i][j];
-
-        }
-
-    }
-
-
-    mostrarResultado(resultado);
-
-
-    mostrarProcedimiento(
-        A,
-        B,
-        resultado,
-        "-"
-    );
-
+    ejecutarOperacion("-");
 }
 
+function ejecutarOperacion(operador) {
+    ocultarMensaje();
 
-/* ==================== PROCEDIMIENTO ==================== */
+    if (document.getElementById("contenedorMatrices").hidden) {
+        mostrarMensaje("Primero debes crear las matrices.", true);
+        return;
+    }
 
-function mostrarProcedimiento(
-    A,
-    B,
-    resultado,
-    operador
-) {
+    try {
+        const A = obtenerMatriz("A");
+        const B = obtenerMatriz("B");
+        const resultado = [];
 
-    const contenedor =
-        document.getElementById(
-            "contenidoProcedimiento"
+        for (let i = 0; i < filas; i++) {
+            resultado[i] = [];
+
+            for (let j = 0; j < columnas; j++) {
+                resultado[i][j] =
+                    operador === "+"
+                        ? A[i][j] + B[i][j]
+                        : A[i][j] - B[i][j];
+            }
+        }
+
+        mostrarResultado(resultado, operador);
+        mostrarProcedimiento(A, B, resultado, operador);
+
+        document.getElementById("resultado").hidden = false;
+        document.getElementById("procedimiento").hidden = false;
+
+        mostrarMensaje(
+            operador === "+"
+                ? "Suma realizada correctamente."
+                : "Resta realizada correctamente."
         );
 
+    } catch (error) {
+        mostrarMensaje(error.message, true);
+    }
+}
 
-    contenedor.innerHTML = "";
+/* ==================================================
+   MOSTRAR RESULTADO
+   ================================================== */
 
+function formatearNumero(numero) {
+    if (Object.is(numero, -0)) {
+        return "0";
+    }
 
-    for (
-        let i = 0;
-        i < filas;
-        i++
-    ) {
+    return String(Number(numero.toPrecision(12)));
+}
 
-        for (
-            let j = 0;
-            j < columnas;
-            j++
-        ) {
+function mostrarResultado(matriz, operador) {
+    const contenedor = document.getElementById("matrizResultado");
+    contenedor.replaceChildren();
 
-            const paso =
-                document.createElement(
-                    "div"
-                );
+    document.getElementById("tituloResultado").textContent =
+        operador === "+" ? "A + B" : "A − B";
 
+    const tabla = document.createElement("div");
+    tabla.className = "matriz-resultado";
+    tabla.style.gridTemplateColumns = `repeat(${columnas}, max-content)`;
 
-            paso.className =
-                "paso-calculo";
+    for (let i = 0; i < filas; i++) {
+        for (let j = 0; j < columnas; j++) {
+            const celda = document.createElement("div");
 
+            celda.className = "resultado-celda";
+            celda.textContent = formatearNumero(matriz[i][j]);
 
+            tabla.appendChild(celda);
+        }
+    }
+
+    contenedor.appendChild(tabla);
+}
+
+/* ==================================================
+   MOSTRAR PROCEDIMIENTO
+   ================================================== */
+
+function mostrarProcedimiento(A, B, resultado, operador) {
+    const contenedor = document.getElementById("contenidoProcedimiento");
+    contenedor.replaceChildren();
+
+    const descripcion = document.createElement("p");
+    descripcion.className = "titulo-procedimiento";
+    descripcion.textContent = operador === "+"
+        ? "Sumamos los elementos correspondientes:"
+        : "Restamos los elementos correspondientes:";
+
+    contenedor.appendChild(descripcion);
+
+    for (let i = 0; i < filas; i++) {
+        for (let j = 0; j < columnas; j++) {
+            const paso = document.createElement("div");
+
+            paso.className = "paso-calculo";
             paso.textContent =
-                `Elemento (${i + 1}, ${j + 1}): `
-                + `${A[i][j]} ${operador} ${B[i][j]} = `
-                + `${resultado[i][j]}`;
-
+                `Elemento (${i + 1}, ${j + 1}): ` +
+                `${formatearNumero(A[i][j])} ${operador} ` +
+                `${formatearNumero(B[i][j])} = ` +
+                `${formatearNumero(resultado[i][j])}`;
 
             contenedor.appendChild(paso);
-
         }
-
     }
 
+    const conclusion = document.createElement("p");
+    conclusion.className = "titulo-procedimiento";
+    conclusion.textContent =
+        "El resultado se obtiene operando cada posición de ambas matrices.";
+
+    contenedor.appendChild(conclusion);
 }
 
-
-/* ==================== LIMPIAR ==================== */
+/* ==================================================
+   BOTÓN LIMPIAR
+   ================================================== */
 
 function limpiarMatrices() {
+    document.getElementById("contenedorMatrices").replaceChildren();
+    document.getElementById("contenedorMatrices").hidden = true;
 
-    document.getElementById(
-        "contenedorMatrices"
-    ).innerHTML = "";
+    document.getElementById("botonesOperacion").hidden = true;
 
+    document.getElementById("resultado").hidden = true;
+    document.getElementById("procedimiento").hidden = true;
 
-    document.getElementById(
-        "matrizResultado"
-    ).innerHTML =
-        "Aquí aparecerá el resultado.";
+    document.getElementById("matrizResultado").replaceChildren();
+    document.getElementById("contenidoProcedimiento").replaceChildren();
+    document.getElementById("tituloResultado").textContent = "";
 
+    document.getElementById("mensajeDimension").textContent =
+        `Dimensiones seleccionadas: ${filas} × ${columnas}`;
 
-    document.getElementById(
-        "contenidoProcedimiento"
-    ).innerHTML =
-        "El procedimiento aparecerá aquí.";
-
+    mostrarMensaje(
+        "Operación limpiada. Puedes crear matrices nuevas."
+    );
 }
 
-
-/* =========================================================
-   TUTORIAL
-   ========================================================= */
-
-let pasoActual = 1;
-
+/* ==================================================
+   TUTORIAL INTERACTIVO
+   ================================================== */
 
 const tutorial = [
-
     {
-        titulo:
-            "Seleccionar dimensiones",
-
+        titulo: "Seleccionar dimensiones",
         descripcion:
-            "Seleccione el número de filas y columnas que tendrán las matrices.",
-
-        imagen:
-            "img/tutorial/paso1.png"
+            "Selecciona una matriz de 2×2, 3×3 o 4×4. También puedes elegir Personalizado para definir filas y columnas entre 1 y 8.",
+        icono: "▦",
+        imagen: "img/tutorial/paso1.png"
     },
-
-
     {
-        titulo:
-            "Ingresar Matriz A",
-
+        titulo: "Ingresar la Matriz A",
         descripcion:
-            "Introduzca los valores correspondientes a la Matriz A.",
-
-        imagen:
-            "img/tutorial/paso2.png"
+            "Presiona Crear matrices y escribe cada valor de la Matriz A en su fila y columna correspondiente. No dejes celdas vacías.",
+        icono: "A",
+        imagen: "img/tutorial/paso2.png"
     },
-
-
     {
-        titulo:
-            "Ingresar Matriz B",
-
+        titulo: "Ingresar la Matriz B",
         descripcion:
-            "Introduzca los valores correspondientes a la Matriz B.",
-
-        imagen:
-            "img/tutorial/paso3.png"
+            "Completa de la misma manera los valores de la Matriz B. Ambas matrices tendrán las mismas dimensiones.",
+        icono: "B",
+        imagen: "img/tutorial/paso3.png"
     },
-
-
     {
-        titulo:
-            "Seleccionar operación",
-
+        titulo: "Seleccionar una operación",
         descripcion:
-            "Seleccione si desea realizar una suma o una resta.",
-
-        imagen:
-            "img/tutorial/paso4.png"
+            "Presiona Sumar para sumar los elementos correspondientes o Restar para calcular la diferencia entre ellos.",
+        icono: "＋ −",
+        imagen: "img/tutorial/paso4.png"
     },
-
-
     {
-        titulo:
-            "Ver procedimiento",
-
+        titulo: "Consultar el procedimiento",
         descripcion:
-            "El sistema mostrará paso a paso cómo se realizó la operación.",
-
-        imagen:
-            "img/tutorial/paso5.png"
+            "El sistema presenta las operaciones de cada posición para que puedas comprobar cómo se obtuvo cada resultado.",
+        icono: "＝",
+        imagen: "img/tutorial/paso5.png"
     },
-
-
     {
-        titulo:
-            "Ver resultado",
-
+        titulo: "Ver el resultado y limpiar",
         descripcion:
-            "Finalmente podrá observar la matriz resultante.",
-
-        imagen:
-            "img/tutorial/paso6.png"
+            "Consulta la matriz final. Cuando quieras comenzar desde cero, presiona Limpiar y crea una nueva operación.",
+        icono: "✓",
+        imagen: "img/tutorial/paso6.png"
     }
-
 ];
 
-
-/* ==================== MOSTRAR PASO ==================== */
-
 function mostrarPaso() {
+    const paso = tutorial[pasoActual - 1];
 
-    const paso =
-        tutorial[pasoActual - 1];
+    document.getElementById("numeroPaso").textContent =
+        `PASO ${pasoActual} DE ${tutorial.length}`;
 
+    document.getElementById("tituloPaso").textContent = paso.titulo;
+    document.getElementById("descripcionPaso").textContent = paso.descripcion;
+    document.getElementById("tutorialIcono").textContent = paso.icono;
 
-    document.getElementById(
-        "numeroPaso"
-    ).textContent =
-        `Paso ${pasoActual} de ${tutorial.length}`;
+    document.getElementById("barraProgreso").style.width =
+        `${(pasoActual / tutorial.length) * 100}%`;
 
+    document.getElementById("btnAnterior").disabled =
+        pasoActual === 1;
 
-    document.getElementById(
-        "tituloPaso"
-    ).textContent =
-        paso.titulo;
+    document.getElementById("btnSiguiente").textContent =
+        pasoActual === tutorial.length ? "Volver al inicio ↺" : "Siguiente →";
 
+    const imagen = document.getElementById("imagenTutorial");
+    const visual = document.getElementById("tutorialVisual");
 
-    document.getElementById(
-        "descripcionPaso"
-    ).textContent =
-        paso.descripcion;
+    imagen.hidden = true;
+    visual.hidden = false;
+    imagen.alt = paso.titulo;
 
+    // Evitar mostrar imágenes antiguas o una imagen rota
+    imagen.onerror = function() {
+        imagen.hidden = true;
+        visual.hidden = false;
+    };
 
-    document.getElementById(
-        "imagenTutorial"
-    ).src =
-        paso.imagen;
+    imagen.onload = function() {
+        imagen.hidden = false;
+        visual.hidden = true;
+    };
 
+    imagen.src = paso.imagen;
 }
-
-
-/* ==================== SIGUIENTE ==================== */
 
 function siguientePaso() {
-
-    if (
-        pasoActual <
-        tutorial.length
-    ) {
-
+    if (pasoActual < tutorial.length) {
         pasoActual++;
-
-        mostrarPaso();
-
+    } else {
+        pasoActual = 1;
     }
 
+    mostrarPaso();
 }
-
-
-/* ==================== ANTERIOR ==================== */
 
 function pasoAnterior() {
-
-    if (
-        pasoActual > 1
-    ) {
-
+    if (pasoActual > 1) {
         pasoActual--;
-
         mostrarPaso();
-
     }
-
 }
 
+/* ==================================================
+   INICIALIZACIÓN
+   ================================================== */
 
-/* ==================== INICIO ==================== */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        mostrarPaso();
-
-    }
-);
+document.addEventListener("DOMContentLoaded", function() {
+    mostrarPaso();
+});

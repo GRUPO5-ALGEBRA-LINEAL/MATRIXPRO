@@ -68,26 +68,14 @@ function crearMatrices() {
     contenedor.innerHTML = "";
 
 
-    crearMatriz(
-        contenedor,
-        "A"
-    );
+   crearMatriz(contenedor, "A");
+crearMatriz(contenedor, "B");
 
+// Mostrar los botones al crear las matrices
+document.getElementById("botonesOperacion").hidden = false;
 
-    crearMatriz(
-        contenedor,
-        "B"
-    );
-
-
-    document.getElementById(
-        "resultado"
-    ).style.display = "block";
-
-
-    document.getElementById(
-        "procedimiento"
-    ).style.display = "block";
+document.getElementById("resultado").style.display = "block";
+document.getElementById("procedimiento").style.display = "block";
 
 }
 

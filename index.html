@@ -1,248 +1,54 @@
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Calculadora de Matrices: suma y resta de matrices.">
-    <title>Calculadora de Matrices | UMG</title>
-    <link rel="stylesheet" href="./CSS/style.css">
-    <script src="./JS/script.js" defer></script>
-</head>
-<body>
-    <header class="encabezado">
-        <a href="#inicio" class="marca">
-            <span class="marca-icono">CM</span>
-            <span>Calculadora de Matrices</span>
-        </a>
+<section id="acerca" class="seccion">
+    <div class="tarjeta-acerca">
 
-        <nav class="navegacion" aria-label="Menú principal">
-            <a href="#inicio">Inicio</a>
-            <a href="#operaciones">Operaciones</a>
-            <a href="#tutorial">Tutorial</a>
-            <a href="#acerca">Acerca de</a>
-        </nav>
-    </header>
+        <div class="icono-acerca">▦</div>
 
-    <main>
-        <section id="inicio" class="seccion inicio">
-            <span class="etiqueta">CÁLCULO MATRICIAL</span>
-            <h1>Calculadora de <span>matrices</span></h1>
-            <p class="descripcion">
-                Realiza operaciones de suma y resta de matrices
-                de manera sencilla, rápida y organizada.
-            </p>
-            <a href="#operaciones" class="boton-principal">
-                Comenzar a calcular
-            </a>
-        </section>
+        <span class="etiqueta">PROYECTO UNIVERSITARIO</span>
 
-        <section id="operaciones" class="seccion">
-            <div class="titulo-seccion">
-                <span class="etiqueta">OPERACIONES</span>
-                <h2>Selecciona las dimensiones</h2>
-                <p>Elige el tamaño de las matrices que deseas operar.</p>
-            </div>
+        <h2>Acerca de Calculadora de Matrices</h2>
 
-            <div class="rejilla-dimensiones">
-                <button class="tarjeta-dimension" data-size="2">
-                    <span class="icono-matriz">▦</span>
-                    <strong>Matriz 2 × 2</strong>
-                    <small>4 elementos</small>
-                </button>
+        <p class="descripcion-acerca">
+            Aplicación web para practicar suma y resta de matrices
+            de Álgebra Lineal.
+        </p>
 
-                <button class="tarjeta-dimension" data-size="3">
-                    <span class="icono-matriz">▦</span>
-                    <strong>Matriz 3 × 3</strong>
-                    <small>9 elementos</small>
-                </button>
-
-                <button class="tarjeta-dimension" data-size="4">
-                    <span class="icono-matriz">▦</span>
-                    <strong>Matriz 4 × 4</strong>
-                    <small>16 elementos</small>
-                </button>
-
-                <button class="tarjeta-dimension" data-size="custom">
-                    <span class="icono-matriz">＋</span>
-                    <strong>Personalizada</strong>
-                    <small>Elige filas y columnas</small>
-                </button>
-            </div>
-
-            <div id="personalizada" class="personalizada oculto">
-                <h3>Dimensiones personalizadas</h3>
-
-                <div class="campos-dimensiones">
-                    <label for="filas">Filas
-                        <input type="number" id="filas"
-                               min="1" max="8" value="2">
-                    </label>
-
-                    <label for="columnas">Columnas
-                        <input type="number" id="columnas"
-                               min="1" max="8" value="2">
-                    </label>
-                </div>
-
-                <button id="crearPersonalizada" class="boton-principal">
-                    Crear matrices
-                </button>
-            </div>
-
-            <p id="estadoSeleccion" class="estado" aria-live="polite">
-                Selecciona una dimensión para comenzar.
+        <div class="informacion-acerca">
+            <p>
+                <strong>Universidad:</strong>
+                Universidad Mariano Gálvez de Guatemala
             </p>
 
-            <div id="areaMatrices" class="area-matrices oculto">
-                <div class="panel-matriz">
-                    <h3>Matriz A</h3>
-                    <div id="matrizA" class="matriz"></div>
-                </div>
+            <p>
+                <strong>Facultad:</strong>
+                Ingeniería en Sistemas de Información y Ciencias de la Computación
+            </p>
 
-                <div class="panel-matriz">
-                    <h3>Matriz B</h3>
-                    <div id="matrizB" class="matriz"></div>
-                </div>
-            </div>
+            <p>
+                <strong>Curso:</strong>
+                Álgebra Lineal
+            </p>
 
-            <div id="botonesOperacion" class="acciones oculto">
-                <button id="sumar" class="boton-principal">
-                    A + B · Sumar
-                </button>
+            <p>
+                <strong>Tecnologías:</strong>
+                HTML, CSS y JavaScript
+            </p>
+        </div>
 
-                <button id="restar" class="boton-secundario">
-                    A − B · Restar
-                </button>
+        <div class="integrantes-acerca">
+            <h3>Desarrolladores</h3>
 
-                <button id="limpiar" class="boton-secundario">
-                    Limpiar
-                </button>
-            </div>
+            <p>Luis Alejandro González Sánchez</p>
+            <p>Christofer Leonardo González Aguilar</p>
+            <p>Pablo Daniel Lemus Palma</p>
+        </div>
 
-            <div id="panelResultado"
-                 class="panel-resultado oculto"
-                 aria-live="polite">
-                <h3 id="tituloResultado">Resultado</h3>
-                <div id="resultado" class="matriz matriz-resultado"></div>
+        <img
+            src="./IMG/logo-umg.png"
+            alt="Logo de la Universidad Mariano Gálvez de Guatemala"
+            class="logo-acerca"
+            onerror="this.style.display='none'"
+        >
 
-                <h4>Procedimiento</h4>
-                <div id="procedimiento" class="procedimiento"></div>
-            </div>
-        </section>
-
-        <section id="tutorial" class="seccion">
-            <div class="titulo-seccion">
-                <span class="etiqueta">GUÍA DE USO</span>
-                <h2>¿Cómo utilizar la calculadora?</h2>
-                <p>Sigue estos pasos para realizar tus operaciones.</p>
-            </div>
-
-            <div class="rejilla-tutorial">
-                <article class="paso-tutorial">
-                    <span class="numero-paso">01</span>
-                    <h3>Selecciona el tamaño</h3>
-                    <p>
-                        Elige una matriz de 2 × 2, 3 × 3, 4 × 4
-                        o define dimensiones personalizadas.
-                    </p>
-                </article>
-
-                <article class="paso-tutorial">
-                    <span class="numero-paso">02</span>
-                    <h3>Ingresa los valores</h3>
-                    <p>
-                        Escribe los números en las casillas
-                        de la matriz A y la matriz B.
-                    </p>
-                </article>
-
-                <article class="paso-tutorial">
-                    <span class="numero-paso">03</span>
-                    <h3>Elige la operación</h3>
-                    <p>
-                        Pulsa sumar o restar. Ambas matrices
-                        deben tener las mismas dimensiones.
-                    </p>
-                </article>
-
-                <article class="paso-tutorial">
-                    <span class="numero-paso">04</span>
-                    <h3>Revisa el resultado</h3>
-                    <p>
-                        Consulta la matriz resultante y el
-                        procedimiento de cada operación.
-                    </p>
-                </article>
-            </div>
-
-            <div class="nota-tutorial">
-                <strong>Recuerda:</strong> la suma y la resta
-                se realizan elemento por elemento, respetando
-                la posición de cada número.
-            </div>
-        </section>
-
-        <section id="acerca" class="seccion">
-            <div class="titulo-seccion">
-                <span class="etiqueta">NUESTRO PROYECTO</span>
-                <h2>Acerca de la calculadora</h2>
-                <p>
-                    Proyecto desarrollado para facilitar
-                    la práctica de operaciones con matrices.
-                </p>
-            </div>
-
-            <div class="tarjeta-universidad">
-                <img
-                    src="./IMG/logo-umg.png"
-                    alt="Logo de la Universidad Mariano Gálvez de Guatemala"
-                    class="logo-umg"
-                    onerror="this.style.display='none'"
-                >
-
-                <h3>Universidad Mariano Gálvez de Guatemala</h3>
-
-                <p>
-                    Facultad de Ingeniería en Sistemas de Información
-                    y Ciencias de la Computación
-                </p>
-
-                <p class="carrera">Ingeniería en Sistemas</p>
-            </div>
-
-            <div class="desarrolladores">
-                <h2>Desarrolladores</h2>
-                <p class="subtitulo-desarrolladores">
-                    Integrantes del proyecto
-                </p>
-
-                <div class="rejilla-integrantes">
-                    <article class="tarjeta-integrante">
-                        <div class="avatar-integrante">👨‍💻</div>
-                        <h3>Luis Alejandro González Sánchez</h3>
-                        <p>Integrante del equipo</p>
-                    </article>
-
-                    <article class="tarjeta-integrante">
-                        <div class="avatar-integrante">👨‍💻</div>
-                        <h3>Christofer Leonardo González Aguilar</h3>
-                        <p>Integrante del equipo</p>
-                    </article>
-
-                    <article class="tarjeta-integrante">
-                        <div class="avatar-integrante">👨‍💻</div>
-                        <h3>Pablo Daniel Lemus Palma</h3>
-                        <p>Integrante del equipo</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="pie-pagina">
-        <p>Calculadora de Matrices</p>
-        <p>Universidad Mariano Gálvez de Guatemala</p>
-    </footer>
-</body>
-</html>
+    </div>
+</section>

@@ -1,4 +1,8 @@
 
+/* ==================================================
+   MATRIXCALC - LÓGICA PRINCIPAL
+   ================================================== */
+
 "use strict";
 
 let filas = 2;
@@ -6,34 +10,51 @@ let columnas = 2;
 let dimensionPersonalizada = false;
 let pasoActual = 1;
 
-/* NAVEGACIÓN */
+/* ==================================================
+   NAVEGACIÓN
+   ================================================== */
+
 function mostrarSeccion(nombre) {
-    document.querySelectorAll(".seccion").forEach(s => {
-        s.classList.remove("activa");
+    document.querySelectorAll(".seccion").forEach(function(seccion) {
+        seccion.classList.remove("activa");
     });
 
-    const seccion = document.getElementById(nombre);
-    if (seccion) seccion.classList.add("activa");
+    const destino = document.getElementById(nombre);
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (destino) {
+        destino.classList.add("activa");
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
 
-/* MENSAJES */
-function mostrarMensaje(texto, error = false) {
-    const mensaje = document.getElementById("mensajeSistema");
-    mensaje.textContent = texto;
-    mensaje.classList.toggle("error", error);
-    mensaje.hidden = false;
+/* ==================================================
+   MENSAJES
+   ================================================== */
+
+function mostrarMensaje(mensaje, esError = false) {
+    const elemento = document.getElementById("mensajeSistema");
+
+    elemento.textContent = mensaje;
+    elemento.classList.toggle("error", esError);
+    elemento.hidden = false;
 }
 
 function ocultarMensaje() {
-    const mensaje = document.getElementById("mensajeSistema");
-    mensaje.textContent = "";
-    mensaje.classList.remove("error");
-    mensaje.hidden = true;
+    const elemento = document.getElementById("mensajeSistema");
+
+    elemento.textContent = "";
+    elemento.classList.remove("error");
+    elemento.hidden = true;
 }
 
-/* DIMENSIONES */
+/* ==================================================
+   SELECCIÓN DE DIMENSIONES
+   ================================================== */
+
 function seleccionarDimension(f, c, boton) {
     filas = f;
     columnas = c;
@@ -41,11 +62,13 @@ function seleccionarDimension(f, c, boton) {
 
     document.getElementById("filas").value = f;
     document.getElementById("columnas").value = c;
+
     document.getElementById("configuracionPersonalizada").hidden = true;
 
-    document.querySelectorAll(".tarjeta-dimension").forEach(t => {
-        t.classList.remove("seleccionada");
+    document.querySelectorAll(".tarjeta-dimension").forEach(function(tarjeta) {
+        tarjeta.classList.remove("seleccionada");
     });
+
     boton.classList.add("seleccionada");
 
     document.getElementById("mensajeDimension").textContent =
@@ -57,19 +80,24 @@ function seleccionarDimension(f, c, boton) {
 function mostrarPersonalizado(boton) {
     dimensionPersonalizada = true;
 
-    document.querySelectorAll(".tarjeta-dimension").forEach(t => {
-        t.classList.remove("seleccionada");
+    document.querySelectorAll(".tarjeta-dimension").forEach(function(tarjeta) {
+        tarjeta.classList.remove("seleccionada");
     });
+
     boton.classList.add("seleccionada");
 
     document.getElementById("configuracionPersonalizada").hidden = false;
+
     document.getElementById("mensajeDimension").textContent =
         "Selecciona entre 1 y 8 filas y columnas.";
 
     ocultarMensaje();
 }
 
-/* CREACIÓN DE MATRICES */
+/* ==================================================
+   CREAR MATRICES
+   ================================================== */
+
 function crearMatrices() {
     ocultarMensaje();
 
@@ -84,7 +112,10 @@ function crearMatrices() {
         filas < 1 || filas > 8 ||
         columnas < 1 || columnas > 8
     ) {
-        mostrarMensaje("Ingresa entre 1 y 8 filas y columnas.", true);
+        mostrarMensaje(
+            "Ingresa un número de filas y columnas entre 1 y 8.",
+            true
+        );
         return;
     }
 
@@ -95,6 +126,7 @@ function crearMatrices() {
     crearMatriz(contenedor, "B");
 
     contenedor.hidden = false;
+
     document.getElementById("botonesOperacion").hidden = false;
     document.getElementById("resultado").hidden = true;
     document.getElementById("procedimiento").hidden = true;
@@ -105,10 +137,16 @@ function crearMatrices() {
     document.getElementById("mensajeDimension").textContent =
         `Matrices listas: ${filas} × ${columnas}`;
 
-    mostrarMensaje("Ingresa los valores de las matrices y elige una operación.");
+    mostrarMensaje(
+        "Matrices creadas. Ingresa los valores y selecciona una operación."
+    );
 
     mostrarSeccion("operaciones");
-    contenedor.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    contenedor.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
 function crearMatriz(contenedor, nombre) {
@@ -119,9 +157,10 @@ function crearMatriz(contenedor, nombre) {
     titulo.textContent = `Matriz ${nombre}`;
     tarjeta.appendChild(titulo);
 
-    const tabla = document.createElement("div");
-    tabla.className = "matriz";
-    tabla.style.gridTemplateColumns = `repeat(${columnas}, max-content)`;
+    const matriz = document.createElement("div");
+    matriz.className = "matriz";
+    matriz.style.gridTemplateColumns =
+        `repeat(${columnas}, max-content)`;
 
     for (let i = 0; i < filas; i++) {
         for (let j = 0; j < columnas; j++) {
@@ -131,21 +170,24 @@ function crearMatriz(contenedor, nombre) {
             input.step = "any";
             input.inputMode = "decimal";
             input.id = `matriz${nombre}-${i}-${j}`;
-            input.placeholder = "0";
             input.setAttribute(
                 "aria-label",
                 `Matriz ${nombre}, fila ${i + 1}, columna ${j + 1}`
             );
+            input.placeholder = "0";
 
-            tabla.appendChild(input);
+            matriz.appendChild(input);
         }
     }
 
-    tarjeta.appendChild(tabla);
+    tarjeta.appendChild(matriz);
     contenedor.appendChild(tarjeta);
 }
 
-/* LECTURA Y VALIDACIÓN */
+/* ==================================================
+   LEER Y VALIDAR MATRICES
+   ================================================== */
+
 function obtenerMatriz(nombre) {
     const matriz = [];
 
@@ -158,7 +200,10 @@ function obtenerMatriz(nombre) {
             );
 
             if (!input || input.value.trim() === "") {
-                if (input) input.focus();
+                if (input) {
+                    input.focus();
+                }
+
                 throw new Error(
                     `Completa la celda (${i + 1}, ${j + 1}) de la Matriz ${nombre}.`
                 );
@@ -168,7 +213,9 @@ function obtenerMatriz(nombre) {
 
             if (!Number.isFinite(valor)) {
                 input.focus();
-                throw new Error("Ingresa únicamente valores numéricos válidos.");
+                throw new Error(
+                    `El valor de la celda (${i + 1}, ${j + 1}) de la Matriz ${nombre} no es válido.`
+                );
             }
 
             matriz[i][j] = valor;
@@ -178,7 +225,10 @@ function obtenerMatriz(nombre) {
     return matriz;
 }
 
-/* SUMA Y RESTA */
+/* ==================================================
+   EJECUTAR OPERACIONES
+   ================================================== */
+
 function sumarMatrices() {
     ejecutarOperacion("+");
 }
@@ -204,9 +254,10 @@ function ejecutarOperacion(operador) {
             resultado[i] = [];
 
             for (let j = 0; j < columnas; j++) {
-                resultado[i][j] = operador === "+"
-                    ? A[i][j] + B[i][j]
-                    : A[i][j] - B[i][j];
+                resultado[i][j] =
+                    operador === "+"
+                        ? A[i][j] + B[i][j]
+                        : A[i][j] - B[i][j];
             }
         }
 
@@ -221,18 +272,24 @@ function ejecutarOperacion(operador) {
                 ? "Suma realizada correctamente."
                 : "Resta realizada correctamente."
         );
+
     } catch (error) {
         mostrarMensaje(error.message, true);
     }
 }
 
-/* FORMATO NUMÉRICO */
+/* ==================================================
+   MOSTRAR RESULTADO
+   ================================================== */
+
 function formatearNumero(numero) {
-    if (Object.is(numero, -0)) return "0";
+    if (Object.is(numero, -0)) {
+        return "0";
+    }
+
     return String(Number(numero.toPrecision(12)));
 }
 
-/* RESULTADO */
 function mostrarResultado(matriz, operador) {
     const contenedor = document.getElementById("matrizResultado");
     contenedor.replaceChildren();
@@ -242,13 +299,16 @@ function mostrarResultado(matriz, operador) {
 
     const tabla = document.createElement("div");
     tabla.className = "matriz-resultado";
-    tabla.style.gridTemplateColumns = `repeat(${columnas}, max-content)`;
+    tabla.style.gridTemplateColumns =
+        `repeat(${columnas}, max-content)`;
 
     for (let i = 0; i < filas; i++) {
         for (let j = 0; j < columnas; j++) {
             const celda = document.createElement("div");
+
             celda.className = "resultado-celda";
             celda.textContent = formatearNumero(matriz[i][j]);
+
             tabla.appendChild(celda);
         }
     }
@@ -256,22 +316,26 @@ function mostrarResultado(matriz, operador) {
     contenedor.appendChild(tabla);
 }
 
-/* PROCEDIMIENTO */
+/* ==================================================
+   MOSTRAR PROCEDIMIENTO
+   ================================================== */
+
 function mostrarProcedimiento(A, B, resultado, operador) {
     const contenedor = document.getElementById("contenidoProcedimiento");
     contenedor.replaceChildren();
 
-    const introduccion = document.createElement("p");
-    introduccion.className = "titulo-procedimiento";
-    introduccion.textContent = operador === "+"
+    const descripcion = document.createElement("p");
+    descripcion.className = "titulo-procedimiento";
+    descripcion.textContent = operador === "+"
         ? "Sumamos los elementos correspondientes:"
         : "Restamos los elementos correspondientes:";
 
-    contenedor.appendChild(introduccion);
+    contenedor.appendChild(descripcion);
 
     for (let i = 0; i < filas; i++) {
         for (let j = 0; j < columnas; j++) {
             const paso = document.createElement("div");
+
             paso.className = "paso-calculo";
             paso.textContent =
                 `Elemento (${i + 1}, ${j + 1}): ` +
@@ -291,12 +355,16 @@ function mostrarProcedimiento(A, B, resultado, operador) {
     contenedor.appendChild(conclusion);
 }
 
-/* LIMPIAR: OCULTA MATRICES, RESULTADO Y BOTONES */
+/* ==================================================
+   BOTÓN LIMPIAR
+   ================================================== */
+
 function limpiarMatrices() {
     document.getElementById("contenedorMatrices").replaceChildren();
     document.getElementById("contenedorMatrices").hidden = true;
 
     document.getElementById("botonesOperacion").hidden = true;
+
     document.getElementById("resultado").hidden = true;
     document.getElementById("procedimiento").hidden = true;
 
@@ -307,40 +375,57 @@ function limpiarMatrices() {
     document.getElementById("mensajeDimension").textContent =
         `Dimensiones seleccionadas: ${filas} × ${columnas}`;
 
-    mostrarMensaje("Matrices limpiadas. Puedes crear una nueva operación.");
+    mostrarMensaje(
+        "Operación limpiada. Puedes crear matrices nuevas."
+    );
 }
 
-/* TUTORIAL */
+/* ==================================================
+   TUTORIAL INTERACTIVO
+   ================================================== */
+
 const tutorial = [
     {
         titulo: "Seleccionar dimensiones",
-        descripcion: "Selecciona 2×2, 3×3, 4×4 o Personalizado para definir filas y columnas.",
-        icono: "▦"
+        descripcion:
+            "Selecciona una matriz de 2×2, 3×3 o 4×4. También puedes elegir Personalizado para definir filas y columnas entre 1 y 8.",
+        icono: "▦",
+        imagen: "img/tutorial/paso1.png"
     },
     {
         titulo: "Ingresar la Matriz A",
-        descripcion: "Presiona Crear matrices y escribe los valores en cada celda de la Matriz A.",
-        icono: "A"
+        descripcion:
+            "Presiona Crear matrices y escribe cada valor de la Matriz A en su fila y columna correspondiente. No dejes celdas vacías.",
+        icono: "A",
+        imagen: "img/tutorial/paso2.png"
     },
     {
         titulo: "Ingresar la Matriz B",
-        descripcion: "Completa las celdas de la Matriz B. Las dos matrices deben tener las mismas dimensiones.",
-        icono: "B"
+        descripcion:
+            "Completa de la misma manera los valores de la Matriz B. Ambas matrices tendrán las mismas dimensiones.",
+        icono: "B",
+        imagen: "img/tutorial/paso3.png"
     },
     {
         titulo: "Seleccionar una operación",
-        descripcion: "Presiona Sumar o Restar para operar los elementos que ocupan la misma posición.",
-        icono: "＋ −"
+        descripcion:
+            "Presiona Sumar para sumar los elementos correspondientes o Restar para calcular la diferencia entre ellos.",
+        icono: "＋ −",
+        imagen: "img/tutorial/paso4.png"
     },
     {
         titulo: "Consultar el procedimiento",
-        descripcion: "Revisa la operación de cada elemento para comprender cómo se obtuvo el resultado.",
-        icono: "＝"
+        descripcion:
+            "El sistema presenta las operaciones de cada posición para que puedas comprobar cómo se obtuvo cada resultado.",
+        icono: "＝",
+        imagen: "img/tutorial/paso5.png"
     },
     {
-        titulo: "Limpiar y comenzar otra vez",
-        descripcion: "Presiona Limpiar para borrar las matrices y el resultado antes de comenzar una nueva operación.",
-        icono: "✓"
+        titulo: "Ver el resultado y limpiar",
+        descripcion:
+            "Consulta la matriz final. Cuando quieras comenzar desde cero, presiona Limpiar y crea una nueva operación.",
+        icono: "✓",
+        imagen: "img/tutorial/paso6.png"
     }
 ];
 
@@ -349,20 +434,49 @@ function mostrarPaso() {
 
     document.getElementById("numeroPaso").textContent =
         `PASO ${pasoActual} DE ${tutorial.length}`;
+
     document.getElementById("tituloPaso").textContent = paso.titulo;
     document.getElementById("descripcionPaso").textContent = paso.descripcion;
     document.getElementById("tutorialIcono").textContent = paso.icono;
 
     document.getElementById("barraProgreso").style.width =
-        `${pasoActual / tutorial.length * 100}%`;
+        `${(pasoActual / tutorial.length) * 100}%`;
 
-    document.getElementById("btnAnterior").disabled = pasoActual === 1;
+    document.getElementById("btnAnterior").disabled =
+        pasoActual === 1;
+
     document.getElementById("btnSiguiente").textContent =
-        pasoActual === tutorial.length ? "Volver al inicio ↺" : "Siguiente →";
+        pasoActual === tutorial.length
+            ? "Volver al inicio ↺"
+            : "Siguiente →";
+
+    const imagen = document.getElementById("imagenTutorial");
+    const visual = document.getElementById("tutorialVisual");
+
+    imagen.hidden = true;
+    visual.hidden = false;
+    imagen.alt = paso.titulo;
+
+    imagen.onerror = function() {
+        imagen.hidden = true;
+        visual.hidden = false;
+    };
+
+    imagen.onload = function() {
+        imagen.hidden = false;
+        visual.hidden = true;
+    };
+
+    imagen.src = paso.imagen;
 }
 
 function siguientePaso() {
-    pasoActual = pasoActual < tutorial.length ? pasoActual + 1 : 1;
+    if (pasoActual < tutorial.length) {
+        pasoActual++;
+    } else {
+        pasoActual = 1;
+    }
+
     mostrarPaso();
 }
 
@@ -373,7 +487,10 @@ function pasoAnterior() {
     }
 }
 
-/* INICIALIZACIÓN */
+/* ==================================================
+   INICIALIZACIÓN
+   ================================================== */
+
 document.addEventListener("DOMContentLoaded", function() {
     mostrarPaso();
 });

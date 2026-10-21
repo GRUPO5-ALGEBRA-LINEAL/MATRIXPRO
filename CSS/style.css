@@ -1,18 +1,20 @@
 
 :root {
     --fondo: #0b1220;
-    --panel: #172438;
-    --borde: #35445a;
+    --panel: #142136;
+    --panel-claro: #1b2b43;
+    --borde: #30435d;
     --azul: #3b82f6;
     --azul-claro: #93c5fd;
     --texto: #f1f5f9;
     --secundario: #aab9ce;
+    --verde: #16a34a;
 }
 
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 [hidden] {
@@ -26,11 +28,11 @@ html {
 body {
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.6;
     color: var(--texto);
     background:
-        radial-gradient(ellipse at top, #1b3150, transparent 55%),
+        radial-gradient(ellipse at top, #1b3150 0%, transparent 55%),
         var(--fondo);
+    line-height: 1.6;
 }
 
 button, input {
@@ -41,22 +43,26 @@ button {
     -webkit-tap-highlight-color: transparent;
 }
 
-button:focus-visible, input:focus-visible {
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
     outline: 3px solid var(--azul-claro);
     outline-offset: 3px;
 }
 
+/* ENCABEZADO */
+
 .header {
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
-    padding: 15px 5%;
-    background: rgba(11,18,32,.97);
-    border-bottom: 1px solid #26364c;
+    gap: 20px;
+    padding: 16px 5%;
+    background: rgba(11, 18, 32, 0.96);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
     backdrop-filter: blur(12px);
 }
 
@@ -83,22 +89,31 @@ button:focus-visible, input:focus-visible {
 
 .menu {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     gap: 8px;
 }
 
 .menu button {
-    padding: 9px 13px;
-    color: #dbe5f2;
-    background: transparent;
+    padding: 10px 13px;
     border: 1px solid transparent;
     border-radius: 9px;
+    background: transparent;
+    color: #dbe5f2;
     cursor: pointer;
+    transition: 0.2s;
 }
 
 .menu button:hover {
+    color: white;
     background: #1d304b;
     border-color: var(--borde);
+}
+
+/* SECCIONES */
+
+main {
+    width: 100%;
 }
 
 .seccion {
@@ -106,36 +121,45 @@ button:focus-visible, input:focus-visible {
     width: min(1180px, 100%);
     min-height: 75vh;
     margin: auto;
-    padding: 48px 25px;
+    padding: 55px 28px;
 }
 
 .seccion.activa {
     display: block;
-    animation: aparecer .25s ease;
+    animation: aparecer 0.3s ease;
 }
 
 @keyframes aparecer {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
+/* INICIO */
 
 .bienvenida {
     max-width: 760px;
-    margin: 25px auto 0;
+    margin: 30px auto 0;
     text-align: center;
 }
 
 .icono-principal {
     display: grid;
     place-items: center;
-    width: 82px;
-    height: 82px;
-    margin: 0 auto 18px;
+    width: 86px;
+    height: 86px;
+    margin: 0 auto 20px;
     color: #bfdbfe;
     background: #1d3555;
     border: 1px solid #42618a;
-    border-radius: 22px;
-    font-size: 52px;
+    border-radius: 23px;
+    font-size: 54px;
+    box-shadow: 0 0 35px rgba(59,130,246,0.15);
 }
 
 .etiqueta {
@@ -146,70 +170,93 @@ button:focus-visible, input:focus-visible {
 }
 
 .bienvenida h1 {
-    margin: 8px 0;
+    margin: 10px 0;
     color: var(--azul-claro);
     font-size: clamp(42px, 7vw, 68px);
-    line-height: 1.2;
+    line-height: 1.15;
 }
 
 .bienvenida h2 {
-    margin-bottom: 12px;
-    font-size: clamp(21px, 4vw, 28px);
+    margin-bottom: 15px;
+    font-size: clamp(20px, 4vw, 28px);
 }
 
 .texto-intro {
     max-width: 640px;
-    margin: 0 auto 24px;
+    margin: 0 auto 26px;
     color: var(--secundario);
+    font-size: 17px;
 }
 
 .btn-principal {
     display: inline-block;
-    padding: 12px 24px;
+    padding: 13px 24px;
     color: white;
     background: linear-gradient(135deg, #2563eb, #3b82f6);
     border: 1px solid #5793fa;
-    border-radius: 11px;
+    border-radius: 10px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 7px 20px #2563eb30;
+    box-shadow: 0 7px 20px rgba(37,99,235,0.2);
+    transition: 0.2s;
 }
 
 .btn-principal:hover {
-    filter: brightness(1.12);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    filter: brightness(1.1);
 }
+
+/* TARJETAS DEL INICIO */
 
 .tarjetas {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
-    margin-top: 55px;
+    margin-top: 65px;
 }
 
 .tarjeta {
-    padding: 23px;
+    padding: 25px;
     background: linear-gradient(145deg, #17263c, #111d30);
     border: 1px solid var(--borde);
     border-radius: 17px;
+    transition: 0.2s;
+}
+
+.tarjeta:hover {
+    transform: translateY(-4px);
+    border-color: #5275a3;
 }
 
 .tarjeta-icono {
     display: grid;
     place-items: center;
-    width: 47px;
-    height: 47px;
-    margin-bottom: 13px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 15px;
     border-radius: 13px;
     font-size: 29px;
+    font-weight: bold;
 }
 
-.verde { color: #86efac; background: #153c32; }
-.azul { color: #93c5fd; background: #1a3456; }
-.morado { color: #c4b5fd; background: #302650; }
+.verde {
+    color: #86efac;
+    background: #153c32;
+}
+
+.azul {
+    color: #93c5fd;
+    background: #1a3456;
+}
+
+.morado {
+    color: #c4b5fd;
+    background: #302650;
+}
 
 .tarjeta h3 {
-    margin-bottom: 7px;
+    margin-bottom: 8px;
+    font-size: 18px;
 }
 
 .tarjeta p {
@@ -218,17 +265,19 @@ button:focus-visible, input:focus-visible {
 }
 
 .enlace-tarjeta {
-    margin-top: 13px;
+    margin-top: 15px;
     padding: 0;
+    border: none;
+    background: transparent;
     color: var(--azul-claro);
-    background: none;
-    border: 0;
     cursor: pointer;
     font-weight: bold;
 }
 
+/* TÍTULOS */
+
 .titulo-seccion {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
     text-align: center;
 }
 
@@ -241,18 +290,19 @@ button:focus-visible, input:focus-visible {
     color: var(--secundario);
 }
 
+/* CONFIGURACIÓN */
+
 .panel {
     padding: 28px;
-    background: linear-gradient(145deg, #1a293f, #152136);
-    border: 1px solid #35445a;
+    background: linear-gradient(145deg, #17263d, #101a2c);
+    border: 1px solid var(--borde);
     border-radius: 20px;
-    box-shadow: 0 12px 35px #00000020;
 }
 
 .configuracion-panel h2 {
     margin-bottom: 5px;
     text-align: center;
-    font-size: 27px;
+    font-size: 25px;
 }
 
 .texto-configuracion {
@@ -262,86 +312,72 @@ button:focus-visible, input:focus-visible {
 }
 
 .opciones-dimensiones {
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 14px !important;
-    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
 }
 
-button.tarjeta-dimension {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 9px !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    min-height: 145px !important;
-    padding: 15px 8px !important;
-    color: var(--texto) !important;
-    background: linear-gradient(145deg, #1b2b43, #172438) !important;
-    border: 1px solid #35445a !important;
-    border-radius: 15px !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-    font-size: 14px !important;
-    font-weight: normal !important;
-    line-height: 1.4 !important;
-    white-space: normal !important;
+.tarjeta-dimension {
+    display: flex;
+    min-width: 0;
+    min-height: 150px;
+    padding: 15px 8px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: var(--texto);
+    background: linear-gradient(145deg, #1b2b43, #172438);
+    border: 1px solid #35445a;
+    border-radius: 15px;
     cursor: pointer;
-    box-shadow: none !important;
-    transition: border-color .2s, transform .2s, box-shadow .2s;
+    transition: 0.2s;
 }
 
-button.tarjeta-dimension:hover {
-    border-color: #5596ff !important;
+.tarjeta-dimension:hover {
+    border-color: var(--azul);
     transform: translateY(-2px);
 }
 
-button.tarjeta-dimension.seleccionada {
-    background: linear-gradient(145deg, #263e60, #1b2b43) !important;
-    border: 2px solid #5596ff !important;
-    box-shadow: 0 0 20px #4182ff38 !important;
+.tarjeta-dimension.seleccionada {
+    background: linear-gradient(145deg, #263e60, #1b2b43);
+    border: 2px solid #5596ff;
+    box-shadow: 0 0 20px rgba(65,130,255,0.18);
 }
 
-.tarjeta-dimension .icono-dimension {
-    display: block;
-    color: #a7caff !important;
-    font-size: 34px !important;
+.icono-dimension {
+    color: var(--azul-claro);
+    font-size: 35px;
     line-height: 1.2;
 }
 
 .tarjeta-dimension strong {
-    display: block;
-    color: #f1f5f9 !important;
-    font-size: 16px !important;
-    font-weight: 700;
+    font-size: 15px;
 }
 
 .tarjeta-dimension small {
-    display: block;
-    color: #aab9ce !important;
-    font-size: 12px !important;
+    color: var(--secundario);
+    font-size: 11px;
     text-align: center;
 }
 
 .indicador {
     position: relative;
-    display: block;
     width: 15px;
     height: 15px;
     border: 2px solid #8795a8;
     border-radius: 50%;
 }
 
-.tarjeta-dimension.seleccionada .indicador {
-    border-color: #7db4ff;
+.seleccionada .indicador {
+    border-color: var(--azul-claro);
 }
 
-.tarjeta-dimension.seleccionada .indicador::after {
+.seleccionada .indicador::after {
     position: absolute;
     inset: 3px;
     content: "";
-    background: #7db4ff;
+    background: var(--azul-claro);
     border-radius: 50%;
 }
 
@@ -353,18 +389,21 @@ button.tarjeta-dimension.seleccionada {
     margin-top: 22px;
 }
 
-.configuracion-personalizada label {
+.campo {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
+}
+
+.campo label {
     color: #dbe5f2;
     font-size: 14px;
     font-weight: bold;
 }
 
-.configuracion-personalizada input {
+.campo input {
     width: 125px;
-    padding: 10px;
+    padding: 11px;
     color: white;
     background: #0b1423;
     border: 1px solid #475569;
@@ -383,9 +422,11 @@ button.tarjeta-dimension.seleccionada {
     margin: 0 auto;
 }
 
+/* MENSAJES */
+
 .mensaje-sistema {
-    margin-top: 20px;
-    padding: 13px 16px;
+    margin: 20px 0;
+    padding: 14px 17px;
     color: #dbeafe;
     background: #172d49;
     border: 1px solid #41618a;
@@ -398,16 +439,18 @@ button.tarjeta-dimension.seleccionada {
     border-color: #9f4555;
 }
 
+/* MATRICES */
+
 .matrices {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 22px;
-    margin-top: 25px;
+    margin-top: 28px;
 }
 
 .matriz-card {
     min-width: 0;
-    padding: 22px 10px;
+    padding: 23px;
     text-align: center;
     background: linear-gradient(145deg, #17263c, #111d30);
     border: 1px solid var(--borde);
@@ -415,7 +458,7 @@ button.tarjeta-dimension.seleccionada {
 }
 
 .matriz-card h2 {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
     color: var(--azul-claro);
 }
 
@@ -426,19 +469,23 @@ button.tarjeta-dimension.seleccionada {
 }
 
 .matriz input {
-    width: clamp(42px, 7vw, 60px);
-    height: 44px;
+    width: clamp(42px, 7vw, 62px);
+    height: 45px;
     padding: 4px;
     color: white;
     background: #0b1423;
     border: 1px solid #455b77;
     border-radius: 7px;
     text-align: center;
+    font-size: 16px;
 }
 
 .matriz input:focus {
     border-color: var(--azul-claro);
+    outline: 2px solid rgba(96,165,250,0.15);
 }
+
+/* BOTONES DE OPERACIÓN */
 
 .botones-operacion {
     display: flex;
@@ -456,11 +503,12 @@ button.tarjeta-dimension.seleccionada {
     border-radius: 9px;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.2s;
 }
 
 .botones-operacion button:hover {
+    transform: translateY(-2px);
     filter: brightness(1.12);
-    transform: translateY(-1px);
 }
 
 .btn-sumar {
@@ -478,25 +526,30 @@ button.tarjeta-dimension.seleccionada {
     border-color: #64748b !important;
 }
 
-.resultado, .procedimiento {
+.btn-limpiar:hover {
+    background: #4b5e77;
+}
+
+/* RESULTADO Y PROCEDIMIENTO */
+
+.resultado,
+.procedimiento {
     margin-top: 22px;
     padding: 25px;
+    text-align: center;
     background: linear-gradient(145deg, #17263c, #111d30);
     border: 1px solid var(--borde);
     border-radius: 17px;
 }
 
-.resultado {
-    text-align: center;
-}
-
-.resultado h2, .procedimiento h2 {
+.resultado h2,
+.procedimiento h2 {
     margin-bottom: 12px;
     color: var(--azul-claro);
 }
 
 .subtitulo-resultado {
-    margin-bottom: 15px;
+    margin-bottom: 17px;
     color: var(--secundario);
 }
 
@@ -509,9 +562,9 @@ button.tarjeta-dimension.seleccionada {
 .resultado-celda {
     display: grid;
     place-items: center;
-    min-width: 45px;
-    min-height: 42px;
-    padding: 6px;
+    min-width: 48px;
+    min-height: 43px;
+    padding: 7px;
     color: #dbeafe;
     background: #0b1423;
     border: 1px solid #3b587d;
@@ -521,12 +574,12 @@ button.tarjeta-dimension.seleccionada {
 
 #contenidoProcedimiento {
     color: #d1dceb;
+    text-align: left;
 }
 
 .paso-calculo {
     margin: 8px 0;
-    padding: 10px 12px;
-    overflow-wrap: anywhere;
+    padding: 9px 12px;
     background: #101c2e;
     border-radius: 7px;
 }
@@ -537,10 +590,12 @@ button.tarjeta-dimension.seleccionada {
     font-weight: bold;
 }
 
+/* TUTORIAL */
+
 .tutorial-container {
     max-width: 850px;
     margin: auto;
-    padding: 25px;
+    padding: 28px;
     background: linear-gradient(145deg, #17263c, #111d30);
     border: 1px solid var(--borde);
     border-radius: 20px;
@@ -549,7 +604,7 @@ button.tarjeta-dimension.seleccionada {
 .tutorial-imagen {
     display: grid;
     place-items: center;
-    min-height: 240px;
+    min-height: 250px;
     overflow: hidden;
     background: #0b1423;
     border: 1px solid #283b55;
@@ -557,6 +612,7 @@ button.tarjeta-dimension.seleccionada {
 }
 
 .tutorial-imagen img {
+    display: block;
     width: 100%;
     max-height: 400px;
     object-fit: contain;
@@ -565,7 +621,7 @@ button.tarjeta-dimension.seleccionada {
 .tutorial-visual {
     display: flex;
     width: 100%;
-    min-height: 240px;
+    min-height: 250px;
     padding: 20px;
     flex-direction: column;
     align-items: center;
@@ -595,7 +651,7 @@ button.tarjeta-dimension.seleccionada {
     width: 16.6667%;
     height: 100%;
     background: var(--azul);
-    transition: width .25s;
+    transition: width 0.25s;
 }
 
 .tutorial-contenido {
@@ -634,7 +690,7 @@ button.tarjeta-dimension.seleccionada {
 }
 
 .tutorial-botones button:disabled {
-    opacity: .4;
+    opacity: 0.4;
     cursor: not-allowed;
 }
 
@@ -653,6 +709,7 @@ button.tarjeta-dimension.seleccionada {
 .formula {
     margin-top: 12px;
     padding: 13px;
+    overflow-wrap: anywhere;
     color: #dbeafe;
     background: #0b1423;
     border: 1px solid #293f5b;
@@ -660,10 +717,12 @@ button.tarjeta-dimension.seleccionada {
     text-align: center;
 }
 
+/* ACERCA */
+
 .acerca-container {
     max-width: 780px;
     margin: auto;
-    padding: 32px;
+    padding: 35px;
     text-align: center;
     background: linear-gradient(145deg, #17263c, #111d30);
     border: 1px solid var(--borde);
@@ -698,18 +757,22 @@ button.tarjeta-dimension.seleccionada {
     color: var(--azul-claro);
 }
 
+/* PIE DE PÁGINA */
+
 footer {
-    padding: 22px 15px;
+    padding: 23px 15px;
     color: #8191a8;
-    border-top: 1px solid #ffffff12;
+    border-top: 1px solid rgba(255,255,255,0.08);
     text-align: center;
     font-size: 13px;
 }
 
-/* TABLET */
+/* TABLETS */
+
 @media (max-width: 900px) {
     .header {
         flex-direction: column;
+        gap: 12px;
     }
 
     .tarjetas {
@@ -717,14 +780,19 @@ footer {
     }
 
     .opciones-dimensiones {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
-/* CELULAR */
+/* CELULARES */
+
 @media (max-width: 600px) {
     .header {
         padding: 13px 12px;
+    }
+
+    .logo {
+        font-size: 21px;
     }
 
     .menu {
@@ -735,21 +803,30 @@ footer {
 
     .menu button {
         padding: 9px 5px;
+        font-size: 13px;
         background: #142136;
         border: 1px solid #26364c;
-        font-size: 13px;
     }
 
     .seccion {
-        padding: 30px 13px;
+        padding: 32px 14px;
     }
 
-    .tarjetas, .matrices {
-        grid-template-columns: 1fr;
+    .bienvenida {
+        margin-top: 12px;
+    }
+
+    .texto-intro {
+        font-size: 15px;
     }
 
     .tarjetas {
-        margin-top: 35px;
+        grid-template-columns: 1fr;
+        margin-top: 38px;
+    }
+
+    .tarjeta {
+        padding: 20px;
     }
 
     .panel {
@@ -757,29 +834,33 @@ footer {
     }
 
     .opciones-dimensiones {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 9px !important;
+        gap: 9px;
     }
 
-    button.tarjeta-dimension {
-        min-height: 130px !important;
-        padding: 12px 5px !important;
+    .tarjeta-dimension {
+        min-height: 130px;
+        padding: 12px 5px;
     }
 
     .tarjeta-dimension strong {
-        font-size: 14px !important;
+        font-size: 13px;
     }
 
     .tarjeta-dimension small {
-        font-size: 11px !important;
+        font-size: 10px;
+    }
+
+    .icono-dimension {
+        font-size: 29px;
     }
 
     .matrices {
+        grid-template-columns: minmax(0, 1fr);
         gap: 15px;
     }
 
     .matriz-card {
-        padding: 17px 6px;
+        padding: 17px 7px;
     }
 
     .matriz {
@@ -787,8 +868,8 @@ footer {
     }
 
     .matriz input {
-        width: clamp(36px, 11vw, 50px);
-        height: 40px;
+        width: clamp(38px, 12vw, 53px);
+        height: 42px;
         padding: 2px;
         font-size: 14px;
     }
@@ -802,19 +883,25 @@ footer {
         width: 100%;
     }
 
-    .resultado, .procedimiento {
-        padding: 18px 10px;
+    .resultado,
+    .procedimiento {
+        padding: 19px 12px;
     }
 
     .resultado-celda {
-        min-width: 35px;
-        min-height: 36px;
-        padding: 4px;
+        min-width: 38px;
+        min-height: 38px;
+        padding: 5px;
         font-size: 13px;
     }
 
     .tutorial-container {
-        padding: 14px;
+        padding: 16px;
+    }
+
+    .tutorial-imagen,
+    .tutorial-visual {
+        min-height: 200px;
     }
 
     .tutorial-botones {
@@ -826,11 +913,43 @@ footer {
     }
 
     .acerca-container {
-        padding: 22px 13px;
+        padding: 22px 14px;
     }
 
     .informacion {
-        padding: 13px;
+        padding: 14px;
         font-size: 14px;
+    }
+}
+
+/* CAMBIOS SOLICITADOS: LOGO UMG E INTEGRANTES */
+
+.logo-umg-contenedor {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.logo-umg {
+    display: block;
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+}
+
+.lista-integrantes {
+    margin: 8px 0 14px 22px;
+    padding-left: 18px;
+    color: #d1dceb;
+}
+
+.lista-integrantes li {
+    margin: 7px 0;
+}
+
+@media (max-width: 600px) {
+    .logo-umg {
+        width: 90px;
+        height: 90px;
     }
 }

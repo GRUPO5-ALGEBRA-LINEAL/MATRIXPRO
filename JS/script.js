@@ -1,332 +1,379 @@
 
 "use strict";
 
-const tarjetasDimension = document.querySelectorAll(".tarjeta-dimension");
-const personalizada = document.getElementById("personalizada");
-const filasInput = document.getElementById("filas");
-const columnasInput = document.getElementById("columnas");
-const crearPersonalizada = document.getElementById("crearPersonalizada");
+let filas = 2;
+let columnas = 2;
+let dimensionPersonalizada = false;
+let pasoActual = 1;
 
-const estadoSeleccion = document.getElementById("estadoSeleccion");
-const areaMatrices = document.getElementById("areaMatrices");
-const matrizA = document.getElementById("matrizA");
-const matrizB = document.getElementById("matrizB");
-const botonesOperacion = document.getElementById("botonesOperacion");
-
-const botonSumar = document.getElementById("sumar");
-const botonRestar = document.getElementById("restar");
-const botonLimpiar = document.getElementById("limpiar");
-
-const panelResultado = document.getElementById("panelResultado");
-const tituloResultado = document.getElementById("tituloResultado");
-const resultado = document.getElementById("resultado");
-const procedimiento = document.getElementById("procedimiento");
-
-let filasActuales = 0;
-let columnasActuales = 0;
-
-function mostrarEstado(mensaje, tipo = "") {
-    estadoSeleccion.textContent = mensaje;
-    estadoSeleccion.className = "estado";
-
-    if (tipo) {
-        estadoSeleccion.classList.add(tipo);
-    }
-}
-
-function seleccionarTarjeta(tarjetaSeleccionada) {
-    tarjetasDimension.forEach((tarjeta) => {
-        tarjeta.classList.toggle(
-            "seleccionada",
-            tarjeta === tarjetaSeleccionada
-        );
+/* NAVEGACIÓN */
+function mostrarSeccion(nombre) {
+    document.querySelectorAll(".seccion").forEach(s => {
+        s.classList.remove("activa");
     });
+
+    const seccion = document.getElementById(nombre);
+    if (seccion) seccion.classList.add("activa");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function ocultarResultado() {
-    panelResultado.classList.add("oculto");
-    resultado.replaceChildren();
-    procedimiento.replaceChildren();
+/* MENSAJES */
+function mostrarMensaje(texto, error = false) {
+    const mensaje = document.getElementById("mensajeSistema");
+    mensaje.textContent = texto;
+    mensaje.classList.toggle("error", error);
+    mensaje.hidden = false;
 }
 
-function crearMatrices(filas, columnas) {
+function ocultarMensaje() {
+    const mensaje = document.getElementById("mensajeSistema");
+    mensaje.textContent = "";
+    mensaje.classList.remove("error");
+    mensaje.hidden = true;
+}
+
+/* DIMENSIONES */
+function seleccionarDimension(f, c, boton) {
+    filas = f;
+    columnas = c;
+    dimensionPersonalizada = false;
+
+    document.getElementById("filas").value = f;
+    document.getElementById("columnas").value = c;
+    document.getElementById("configuracionPersonalizada").hidden = true;
+
+    document.querySelectorAll(".tarjeta-dimension").forEach(t => {
+        t.classList.remove("seleccionada");
+    });
+    boton.classList.add("seleccionada");
+
+    document.getElementById("mensajeDimension").textContent =
+        `Dimensiones seleccionadas: ${f} × ${c}`;
+
+    ocultarMensaje();
+}
+
+function mostrarPersonalizado(boton) {
+    dimensionPersonalizada = true;
+
+    document.querySelectorAll(".tarjeta-dimension").forEach(t => {
+        t.classList.remove("seleccionada");
+    });
+    boton.classList.add("seleccionada");
+
+    document.getElementById("configuracionPersonalizada").hidden = false;
+    document.getElementById("mensajeDimension").textContent =
+        "Selecciona entre 1 y 8 filas y columnas.";
+
+    ocultarMensaje();
+}
+
+/* CREACIÓN DE MATRICES */
+function crearMatrices() {
+    ocultarMensaje();
+
+    if (dimensionPersonalizada) {
+        filas = Number(document.getElementById("filas").value);
+        columnas = Number(document.getElementById("columnas").value);
+    }
+
     if (
         !Number.isInteger(filas) ||
         !Number.isInteger(columnas) ||
-        filas < 1 ||
-        filas > 8 ||
-        columnas < 1 ||
-        columnas > 8
+        filas < 1 || filas > 8 ||
+        columnas < 1 || columnas > 8
     ) {
-        mostrarEstado(
-            "Las filas y columnas deben estar entre 1 y 8.",
-            "error"
-        );
+        mostrarMensaje("Ingresa entre 1 y 8 filas y columnas.", true);
         return;
     }
 
-    filasActuales = filas;
-    columnasActuales = columnas;
+    const contenedor = document.getElementById("contenedorMatrices");
+    contenedor.replaceChildren();
 
-    crearMatriz(matrizA, filas, columnas, "A");
-    crearMatriz(matrizB, filas, columnas, "B");
+    crearMatriz(contenedor, "A");
+    crearMatriz(contenedor, "B");
 
-    areaMatrices.classList.remove("oculto");
-    botonesOperacion.classList.remove("oculto");
-    personalizada.classList.add("oculto");
+    contenedor.hidden = false;
+    document.getElementById("botonesOperacion").hidden = false;
+    document.getElementById("resultado").hidden = true;
+    document.getElementById("procedimiento").hidden = true;
 
-    ocultarResultado();
+    document.getElementById("matrizResultado").replaceChildren();
+    document.getElementById("contenidoProcedimiento").replaceChildren();
 
-    mostrarEstado(
-        `Matrices ${filas} × ${columnas} creadas. Ingresa los valores.`,
-        "exito"
-    );
+    document.getElementById("mensajeDimension").textContent =
+        `Matrices listas: ${filas} × ${columnas}`;
 
-    document.getElementById("operaciones").scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+    mostrarMensaje("Ingresa los valores de las matrices y elige una operación.");
+
+    mostrarSeccion("operaciones");
+    contenedor.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function crearMatriz(contenedor, filas, columnas, nombre) {
-    contenedor.replaceChildren();
-    contenedor.style.gridTemplateColumns =
-        `repeat(${columnas}, minmax(0, 1fr))`;
+function crearMatriz(contenedor, nombre) {
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "matriz-card";
 
-    for (let fila = 0; fila < filas; fila++) {
-        for (let columna = 0; columna < columnas; columna++) {
-            const entrada = document.createElement("input");
+    const titulo = document.createElement("h2");
+    titulo.textContent = `Matriz ${nombre}`;
+    tarjeta.appendChild(titulo);
 
-            entrada.type = "number";
-            entrada.step = "any";
-            entrada.inputMode = "decimal";
-            entrada.className = "celda";
-            entrada.placeholder = "0";
-            entrada.setAttribute(
+    const tabla = document.createElement("div");
+    tabla.className = "matriz";
+    tabla.style.gridTemplateColumns = `repeat(${columnas}, max-content)`;
+
+    for (let i = 0; i < filas; i++) {
+        for (let j = 0; j < columnas; j++) {
+            const input = document.createElement("input");
+
+            input.type = "number";
+            input.step = "any";
+            input.inputMode = "decimal";
+            input.id = `matriz${nombre}-${i}-${j}`;
+            input.placeholder = "0";
+            input.setAttribute(
                 "aria-label",
-                `Matriz ${nombre}, fila ${fila + 1}, columna ${columna + 1}`
+                `Matriz ${nombre}, fila ${i + 1}, columna ${j + 1}`
             );
-            entrada.title =
-                `${nombre}[${fila + 1}, ${columna + 1}]`;
 
-            entrada.addEventListener("input", ocultarResultado);
-
-            contenedor.appendChild(entrada);
+            tabla.appendChild(input);
         }
     }
+
+    tarjeta.appendChild(tabla);
+    contenedor.appendChild(tarjeta);
 }
 
-function obtenerValores(contenedor, nombre) {
-    const entradas = Array.from(
-        contenedor.querySelectorAll("input")
-    );
+/* LECTURA Y VALIDACIÓN */
+function obtenerMatriz(nombre) {
+    const matriz = [];
 
-    const valores = [];
-    let indice = 0;
+    for (let i = 0; i < filas; i++) {
+        matriz[i] = [];
 
-    for (let fila = 0; fila < filasActuales; fila++) {
-        const filaValores = [];
+        for (let j = 0; j < columnas; j++) {
+            const input = document.getElementById(
+                `matriz${nombre}-${i}-${j}`
+            );
 
-        for (
-            let columna = 0;
-            columna < columnasActuales;
-            columna++
-        ) {
-            const entrada = entradas[indice];
-            const texto = entrada.value.trim();
-
-            if (texto === "" || !Number.isFinite(Number(texto))) {
-                entrada.focus();
-
+            if (!input || input.value.trim() === "") {
+                if (input) input.focus();
                 throw new Error(
-                    `Completa con un número válido la celda ` +
-                    `${nombre}[${fila + 1}, ${columna + 1}].`
+                    `Completa la celda (${i + 1}, ${j + 1}) de la Matriz ${nombre}.`
                 );
             }
 
-            filaValores.push(Number(texto));
-            indice++;
+            const valor = Number(input.value);
+
+            if (!Number.isFinite(valor)) {
+                input.focus();
+                throw new Error("Ingresa únicamente valores numéricos válidos.");
+            }
+
+            matriz[i][j] = valor;
         }
-
-        valores.push(filaValores);
     }
 
-    return valores;
+    return matriz;
 }
 
-function formatearNumero(numero) {
-    if (Object.is(numero, -0)) {
-        numero = 0;
-    }
-
-    if (Number.isInteger(numero)) {
-        return String(numero);
-    }
-
-    return String(Number(numero.toFixed(8)));
+/* SUMA Y RESTA */
+function sumarMatrices() {
+    ejecutarOperacion("+");
 }
 
-function realizarOperacion(operacion) {
-    if (filasActuales === 0 || columnasActuales === 0) {
-        mostrarEstado(
-            "Primero selecciona las dimensiones de las matrices.",
-            "error"
-        );
+function restarMatrices() {
+    ejecutarOperacion("-");
+}
+
+function ejecutarOperacion(operador) {
+    ocultarMensaje();
+
+    if (document.getElementById("contenedorMatrices").hidden) {
+        mostrarMensaje("Primero debes crear las matrices.", true);
         return;
     }
 
     try {
-        const valoresA = obtenerValores(matrizA, "A");
-        const valoresB = obtenerValores(matrizB, "B");
+        const A = obtenerMatriz("A");
+        const B = obtenerMatriz("B");
+        const resultado = [];
 
-        const signo = operacion === "suma" ? "+" : "−";
-        const nombreOperacion =
-            operacion === "suma" ? "Suma" : "Resta";
+        for (let i = 0; i < filas; i++) {
+            resultado[i] = [];
 
-        const matrizResultado = [];
-        const pasos = [];
-
-        for (let fila = 0; fila < filasActuales; fila++) {
-            const filaResultado = [];
-
-            for (
-                let columna = 0;
-                columna < columnasActuales;
-                columna++
-            ) {
-                const a = valoresA[fila][columna];
-                const b = valoresB[fila][columna];
-
-                const valor =
-                    operacion === "suma" ? a + b : a - b;
-
-                filaResultado.push(valor);
-
-                pasos.push({
-                    fila: fila + 1,
-                    columna: columna + 1,
-                    a,
-                    b,
-                    signo,
-                    valor
-                });
+            for (let j = 0; j < columnas; j++) {
+                resultado[i][j] = operador === "+"
+                    ? A[i][j] + B[i][j]
+                    : A[i][j] - B[i][j];
             }
-
-            matrizResultado.push(filaResultado);
         }
 
-        mostrarResultado(
-            matrizResultado,
-            pasos,
-            nombreOperacion
-        );
+        mostrarResultado(resultado, operador);
+        mostrarProcedimiento(A, B, resultado, operador);
 
-        mostrarEstado(
-            `${nombreOperacion} realizada correctamente.`,
-            "exito"
+        document.getElementById("resultado").hidden = false;
+        document.getElementById("procedimiento").hidden = false;
+
+        mostrarMensaje(
+            operador === "+"
+                ? "Suma realizada correctamente."
+                : "Resta realizada correctamente."
         );
     } catch (error) {
-        mostrarEstado(error.message, "error");
-        ocultarResultado();
+        mostrarMensaje(error.message, true);
     }
 }
 
-function mostrarResultado(matriz, pasos, nombreOperacion) {
-    tituloResultado.textContent = `Resultado de la ${nombreOperacion.toLowerCase()}`;
+/* FORMATO NUMÉRICO */
+function formatearNumero(numero) {
+    if (Object.is(numero, -0)) return "0";
+    return String(Number(numero.toPrecision(12)));
+}
 
-    resultado.replaceChildren();
-    resultado.style.gridTemplateColumns =
-        `repeat(${columnasActuales}, minmax(0, 1fr))`;
+/* RESULTADO */
+function mostrarResultado(matriz, operador) {
+    const contenedor = document.getElementById("matrizResultado");
+    contenedor.replaceChildren();
 
-    matriz.forEach((fila) => {
-        fila.forEach((valor) => {
+    document.getElementById("tituloResultado").textContent =
+        operador === "+" ? "A + B" : "A − B";
+
+    const tabla = document.createElement("div");
+    tabla.className = "matriz-resultado";
+    tabla.style.gridTemplateColumns = `repeat(${columnas}, max-content)`;
+
+    for (let i = 0; i < filas; i++) {
+        for (let j = 0; j < columnas; j++) {
             const celda = document.createElement("div");
-            celda.className = "celda-resultado";
-            celda.textContent = formatearNumero(valor);
-            resultado.appendChild(celda);
-        });
-    });
-
-    procedimiento.replaceChildren();
-
-    pasos.forEach((paso) => {
-        const linea = document.createElement("div");
-        linea.className = "linea-procedimiento";
-
-        const explicacion = document.createElement("span");
-        explicacion.textContent =
-            `C[${paso.fila}, ${paso.columna}] = ` +
-            `${formatearNumero(paso.a)} ${paso.signo} ` +
-            `${formatearNumero(paso.b)} = ` +
-            `${formatearNumero(paso.valor)}`;
-
-        linea.appendChild(explicacion);
-        procedimiento.appendChild(linea);
-    });
-
-    panelResultado.classList.remove("oculto");
-
-    panelResultado.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
-    });
-}
-
-function limpiarMatrices() {
-    filasActuales = 0;
-    columnasActuales = 0;
-
-    areaMatrices.classList.add("oculto");
-    botonesOperacion.classList.add("oculto");
-    personalizada.classList.add("oculto");
-
-    matrizA.replaceChildren();
-    matrizB.replaceChildren();
-
-    seleccionarTarjeta(null);
-    ocultarResultado();
-
-    mostrarEstado("Selecciona una dimensión para comenzar.");
-}
-
-tarjetasDimension.forEach((tarjeta) => {
-    tarjeta.addEventListener("click", () => {
-        const dimension = tarjeta.dataset.size;
-
-        seleccionarTarjeta(tarjeta);
-
-        if (dimension === "custom") {
-            personalizada.classList.remove("oculto");
-            mostrarEstado(
-                "Indica las filas y columnas de tus matrices."
-            );
-
-            personalizada.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
-
-            return;
+            celda.className = "resultado-celda";
+            celda.textContent = formatearNumero(matriz[i][j]);
+            tabla.appendChild(celda);
         }
+    }
 
-        const tamano = Number(dimension);
-        crearMatrices(tamano, tamano);
-    });
+    contenedor.appendChild(tabla);
+}
+
+/* PROCEDIMIENTO */
+function mostrarProcedimiento(A, B, resultado, operador) {
+    const contenedor = document.getElementById("contenidoProcedimiento");
+    contenedor.replaceChildren();
+
+    const introduccion = document.createElement("p");
+    introduccion.className = "titulo-procedimiento";
+    introduccion.textContent = operador === "+"
+        ? "Sumamos los elementos correspondientes:"
+        : "Restamos los elementos correspondientes:";
+
+    contenedor.appendChild(introduccion);
+
+    for (let i = 0; i < filas; i++) {
+        for (let j = 0; j < columnas; j++) {
+            const paso = document.createElement("div");
+            paso.className = "paso-calculo";
+            paso.textContent =
+                `Elemento (${i + 1}, ${j + 1}): ` +
+                `${formatearNumero(A[i][j])} ${operador} ` +
+                `${formatearNumero(B[i][j])} = ` +
+                `${formatearNumero(resultado[i][j])}`;
+
+            contenedor.appendChild(paso);
+        }
+    }
+
+    const conclusion = document.createElement("p");
+    conclusion.className = "titulo-procedimiento";
+    conclusion.textContent =
+        "El resultado se obtiene operando cada posición de ambas matrices.";
+
+    contenedor.appendChild(conclusion);
+}
+
+/* LIMPIAR: OCULTA MATRICES, RESULTADO Y BOTONES */
+function limpiarMatrices() {
+    document.getElementById("contenedorMatrices").replaceChildren();
+    document.getElementById("contenedorMatrices").hidden = true;
+
+    document.getElementById("botonesOperacion").hidden = true;
+    document.getElementById("resultado").hidden = true;
+    document.getElementById("procedimiento").hidden = true;
+
+    document.getElementById("matrizResultado").replaceChildren();
+    document.getElementById("contenidoProcedimiento").replaceChildren();
+    document.getElementById("tituloResultado").textContent = "";
+
+    document.getElementById("mensajeDimension").textContent =
+        `Dimensiones seleccionadas: ${filas} × ${columnas}`;
+
+    mostrarMensaje("Matrices limpiadas. Puedes crear una nueva operación.");
+}
+
+/* TUTORIAL */
+const tutorial = [
+    {
+        titulo: "Seleccionar dimensiones",
+        descripcion: "Selecciona 2×2, 3×3, 4×4 o Personalizado para definir filas y columnas.",
+        icono: "▦"
+    },
+    {
+        titulo: "Ingresar la Matriz A",
+        descripcion: "Presiona Crear matrices y escribe los valores en cada celda de la Matriz A.",
+        icono: "A"
+    },
+    {
+        titulo: "Ingresar la Matriz B",
+        descripcion: "Completa las celdas de la Matriz B. Las dos matrices deben tener las mismas dimensiones.",
+        icono: "B"
+    },
+    {
+        titulo: "Seleccionar una operación",
+        descripcion: "Presiona Sumar o Restar para operar los elementos que ocupan la misma posición.",
+        icono: "＋ −"
+    },
+    {
+        titulo: "Consultar el procedimiento",
+        descripcion: "Revisa la operación de cada elemento para comprender cómo se obtuvo el resultado.",
+        icono: "＝"
+    },
+    {
+        titulo: "Limpiar y comenzar otra vez",
+        descripcion: "Presiona Limpiar para borrar las matrices y el resultado antes de comenzar una nueva operación.",
+        icono: "✓"
+    }
+];
+
+function mostrarPaso() {
+    const paso = tutorial[pasoActual - 1];
+
+    document.getElementById("numeroPaso").textContent =
+        `PASO ${pasoActual} DE ${tutorial.length}`;
+    document.getElementById("tituloPaso").textContent = paso.titulo;
+    document.getElementById("descripcionPaso").textContent = paso.descripcion;
+    document.getElementById("tutorialIcono").textContent = paso.icono;
+
+    document.getElementById("barraProgreso").style.width =
+        `${pasoActual / tutorial.length * 100}%`;
+
+    document.getElementById("btnAnterior").disabled = pasoActual === 1;
+    document.getElementById("btnSiguiente").textContent =
+        pasoActual === tutorial.length ? "Volver al inicio ↺" : "Siguiente →";
+}
+
+function siguientePaso() {
+    pasoActual = pasoActual < tutorial.length ? pasoActual + 1 : 1;
+    mostrarPaso();
+}
+
+function pasoAnterior() {
+    if (pasoActual > 1) {
+        pasoActual--;
+        mostrarPaso();
+    }
+}
+
+/* INICIALIZACIÓN */
+document.addEventListener("DOMContentLoaded", function() {
+    mostrarPaso();
 });
-
-crearPersonalizada.addEventListener("click", () => {
-    const filas = Number(filasInput.value);
-    const columnas = Number(columnasInput.value);
-
-    crearMatrices(filas, columnas);
-});
-
-botonSumar.addEventListener("click", () => {
-    realizarOperacion("suma");
-});
-
-botonRestar.addEventListener("click", () => {
-    realizarOperacion("resta");
-});
-
-botonLimpiar.addEventListener("click", limpiarMatrices);

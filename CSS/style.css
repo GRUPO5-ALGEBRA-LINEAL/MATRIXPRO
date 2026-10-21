@@ -1,8 +1,8 @@
 
 :root {
     --fondo: #080e1c;
-    --fondo-panel: #101a2e;
-    --fondo-tarjeta: #14213a;
+    --panel: #101a2e;
+    --tarjeta: #14213a;
     --borde: #293a58;
     --texto: #f4f7ff;
     --texto-secundario: #aab8d0;
@@ -20,7 +20,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 90px;
+    scroll-padding-top: 100px;
 }
 
 body {
@@ -34,11 +34,6 @@ body {
 button,
 input {
     font: inherit;
-}
-
-button,
-a {
-    -webkit-tap-highlight-color: transparent;
 }
 
 button {
@@ -58,8 +53,8 @@ a {
     justify-content: space-between;
     align-items: center;
     gap: 20px;
-    padding: 16px 7%;
-    background: rgba(8, 14, 28, 0.96);
+    padding: 16px 6%;
+    background: rgba(8, 14, 28, 0.97);
     border-bottom: 1px solid var(--borde);
 }
 
@@ -67,24 +62,25 @@ a {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 21px;
+    font-size: 20px;
     font-weight: 800;
 }
 
 .marca-icono {
     display: grid;
     place-items: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    width: 42px;
+    height: 42px;
     color: white;
     background: linear-gradient(135deg, #4388ff, #7659ed);
+    border-radius: 10px;
+    font-size: 15px;
 }
 
 .navegacion {
     display: flex;
     flex-wrap: wrap;
-    gap: 22px;
+    gap: 20px;
 }
 
 .navegacion a {
@@ -100,18 +96,21 @@ a {
 .seccion {
     width: min(1120px, 90%);
     margin: 0 auto;
-    padding: 85px 0;
+    padding: 80px 0;
 }
 
 .inicio {
-    min-height: 430px;
+    min-height: 440px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    background:
-        radial-gradient(ellipse at top, #182b4c 0%, transparent 65%);
+    background: radial-gradient(
+        ellipse at top,
+        #182b4c 0%,
+        transparent 68%
+    );
 }
 
 .etiqueta {
@@ -125,9 +124,9 @@ a {
 
 .inicio h1 {
     max-width: 850px;
-    font-size: clamp(36px, 6vw, 60px);
-    line-height: 1.12;
     margin-bottom: 22px;
+    font-size: clamp(35px, 6vw, 60px);
+    line-height: 1.15;
 }
 
 .inicio h1 span {
@@ -166,7 +165,7 @@ a {
 
 .boton-secundario {
     color: var(--texto);
-    background: var(--fondo-tarjeta);
+    background: var(--tarjeta);
     border-color: var(--borde);
 }
 
@@ -205,7 +204,7 @@ a {
     min-height: 170px;
     padding: 20px 12px;
     color: var(--texto);
-    background: var(--fondo-panel);
+    background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 15px;
     transition: border-color 0.2s, transform 0.2s,
@@ -238,7 +237,7 @@ a {
     max-width: 450px;
     margin: 25px auto;
     padding: 24px;
-    background: var(--fondo-panel);
+    background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 15px;
 }
@@ -298,7 +297,7 @@ a {
 .panel-matriz {
     min-width: 0;
     padding: 22px;
-    background: var(--fondo-panel);
+    background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 15px;
     overflow-x: auto;
@@ -349,7 +348,7 @@ a {
 .panel-resultado {
     margin-top: 30px;
     padding: 25px;
-    background: var(--fondo-panel);
+    background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 15px;
 }
@@ -395,10 +394,6 @@ a {
     overflow-wrap: anywhere;
 }
 
-.linea-procedimiento strong {
-    color: var(--texto);
-}
-
 .rejilla-tutorial {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -407,7 +402,7 @@ a {
 
 .paso-tutorial {
     padding: 25px;
-    background: var(--fondo-panel);
+    background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 14px;
 }
@@ -446,7 +441,7 @@ a {
     align-items: center;
     gap: 12px;
     padding: 30px;
-    background: var(--fondo-panel);
+    background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 16px;
     text-align: center;
@@ -489,9 +484,15 @@ a {
 
 .tarjeta-integrante {
     padding: 25px 15px;
-    background: var(--fondo-panel);
+    background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 14px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.tarjeta-integrante:hover {
+    transform: translateY(-3px);
+    border-color: var(--azul);
 }
 
 .avatar-integrante {
@@ -508,12 +509,6 @@ a {
     margin-top: 7px;
     color: var(--texto-secundario);
     font-size: 14px;
-}
-
-.aviso-nombres {
-    margin-top: 18px;
-    color: var(--texto-secundario);
-    font-size: 13px;
 }
 
 .pie-pagina {

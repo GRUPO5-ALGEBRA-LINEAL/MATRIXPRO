@@ -1005,3 +1005,8 @@ footer {
     }
 
 }
+
+/* Ocultar elementos marcados con hidden */
+[hidden] {
+    display: none !important;
+}

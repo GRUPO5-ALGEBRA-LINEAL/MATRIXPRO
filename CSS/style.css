@@ -1,3 +1,4 @@
+
 /* ==================================================
    MATRIXCALC - DISEÑO PRINCIPAL
    ================================================== */
@@ -762,6 +763,23 @@ main {
     color: var(--azul-claro);
 }
 
+/* LOGO UMG: SOLO EN ACERCA */
+
+.logo-umg-contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+}
+
+.logo-umg {
+    display: block;
+    width: 150px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
 /* PIE DE PÁGINA */
 
 footer {
@@ -925,17 +943,4 @@ footer {
         padding: 14px;
         font-size: 14px;
     }
-}
-
-.logo-umg {
-    width: 45px;
-    height: 45px;
-    object-fit: contain;
-    display: block;
-}
-
-.header .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }

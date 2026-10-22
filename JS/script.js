@@ -62,7 +62,6 @@ function seleccionarDimension(f, c, boton) {
 
     document.getElementById("filas").value = f;
     document.getElementById("columnas").value = c;
-
     document.getElementById("configuracionPersonalizada").hidden = true;
 
     document.querySelectorAll(".tarjeta-dimension").forEach(function(tarjeta) {
@@ -159,8 +158,7 @@ function crearMatriz(contenedor, nombre) {
 
     const matriz = document.createElement("div");
     matriz.className = "matriz";
-    matriz.style.gridTemplateColumns =
-        `repeat(${columnas}, max-content)`;
+    matriz.style.gridTemplateColumns = `repeat(${columnas}, max-content)`;
 
     for (let i = 0; i < filas; i++) {
         for (let j = 0; j < columnas; j++) {
@@ -213,6 +211,7 @@ function obtenerMatriz(nombre) {
 
             if (!Number.isFinite(valor)) {
                 input.focus();
+
                 throw new Error(
                     `El valor de la celda (${i + 1}, ${j + 1}) de la Matriz ${nombre} no es válido.`
                 );
@@ -299,8 +298,7 @@ function mostrarResultado(matriz, operador) {
 
     const tabla = document.createElement("div");
     tabla.className = "matriz-resultado";
-    tabla.style.gridTemplateColumns =
-        `repeat(${columnas}, max-content)`;
+    tabla.style.gridTemplateColumns = `repeat(${columnas}, max-content)`;
 
     for (let i = 0; i < filas; i++) {
         for (let j = 0; j < columnas; j++) {
@@ -326,6 +324,7 @@ function mostrarProcedimiento(A, B, resultado, operador) {
 
     const descripcion = document.createElement("p");
     descripcion.className = "titulo-procedimiento";
+
     descripcion.textContent = operador === "+"
         ? "Sumamos los elementos correspondientes:"
         : "Restamos los elementos correspondientes:";
@@ -364,7 +363,6 @@ function limpiarMatrices() {
     document.getElementById("contenedorMatrices").hidden = true;
 
     document.getElementById("botonesOperacion").hidden = true;
-
     document.getElementById("resultado").hidden = true;
     document.getElementById("procedimiento").hidden = true;
 
@@ -381,7 +379,7 @@ function limpiarMatrices() {
 }
 
 /* ==================================================
-   TUTORIAL INTERACTIVO
+   TUTORIAL INTERACTIVO: SEIS PASOS
    ================================================== */
 
 const tutorial = [

@@ -494,3 +494,15 @@ function pasoAnterior() {
 document.addEventListener("DOMContentLoaded", function() {
     mostrarPaso();
 });
+/* ==================================================
+   PRECARGAR LAS IMÁGENES DEL TUTORIAL
+   ================================================== */
+
+function precargarImagenesTutorial() {
+    tutorial.forEach(function(paso) {
+        const imagen = new Image();
+        imagen.src = paso.imagen;
+    });
+}
+
+precargarImagenesTutorial();

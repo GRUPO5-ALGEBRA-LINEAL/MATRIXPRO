@@ -1,4 +1,3 @@
-
 /* ==================================================
    MATRIXCALC - LÓGICA PRINCIPAL
    ================================================== */
@@ -62,6 +61,7 @@ function seleccionarDimension(f, c, boton) {
 
     document.getElementById("filas").value = f;
     document.getElementById("columnas").value = c;
+
     document.getElementById("configuracionPersonalizada").hidden = true;
 
     document.querySelectorAll(".tarjeta-dimension").forEach(function(tarjeta) {
@@ -324,7 +324,6 @@ function mostrarProcedimiento(A, B, resultado, operador) {
 
     const descripcion = document.createElement("p");
     descripcion.className = "titulo-procedimiento";
-
     descripcion.textContent = operador === "+"
         ? "Sumamos los elementos correspondientes:"
         : "Restamos los elementos correspondientes:";
@@ -363,6 +362,7 @@ function limpiarMatrices() {
     document.getElementById("contenedorMatrices").hidden = true;
 
     document.getElementById("botonesOperacion").hidden = true;
+
     document.getElementById("resultado").hidden = true;
     document.getElementById("procedimiento").hidden = true;
 
@@ -379,7 +379,7 @@ function limpiarMatrices() {
 }
 
 /* ==================================================
-   TUTORIAL INTERACTIVO: SEIS PASOS
+   TUTORIAL INTERACTIVO
    ================================================== */
 
 const tutorial = [
@@ -455,6 +455,7 @@ function mostrarPaso() {
     visual.hidden = false;
     imagen.alt = paso.titulo;
 
+    // Si la imagen falla, se conserva el indicador visual alternativo.
     imagen.onerror = function() {
         imagen.hidden = true;
         visual.hidden = false;
@@ -465,6 +466,7 @@ function mostrarPaso() {
         visual.hidden = true;
     };
 
+    // IMPORTANTE: la carpeta se llama IMG, en mayúsculas.
     imagen.src = paso.imagen;
 }
 

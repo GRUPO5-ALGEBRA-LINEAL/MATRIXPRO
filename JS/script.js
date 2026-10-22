@@ -388,42 +388,42 @@ const tutorial = [
         descripcion:
             "Selecciona una matriz de 2×2, 3×3 o 4×4. También puedes elegir Personalizado para definir filas y columnas entre 1 y 8.",
         icono: "▦",
-        imagen: "img/tutorial/paso1.png"
+        imagen: "IMG/tutorial/paso1.png"
     },
     {
         titulo: "Ingresar la Matriz A",
         descripcion:
             "Presiona Crear matrices y escribe cada valor de la Matriz A en su fila y columna correspondiente. No dejes celdas vacías.",
         icono: "A",
-        imagen: "img/tutorial/paso2.png"
+        imagen: "IMG/tutorial/paso2.png"
     },
     {
         titulo: "Ingresar la Matriz B",
         descripcion:
             "Completa de la misma manera los valores de la Matriz B. Ambas matrices tendrán las mismas dimensiones.",
         icono: "B",
-        imagen: "img/tutorial/paso3.png"
+        imagen: "IMG/tutorial/paso3.png"
     },
     {
         titulo: "Seleccionar una operación",
         descripcion:
             "Presiona Sumar para sumar los elementos correspondientes o Restar para calcular la diferencia entre ellos.",
         icono: "＋ −",
-        imagen: "img/tutorial/paso4.png"
+        imagen: "IMG/tutorial/paso4.png"
     },
     {
         titulo: "Consultar el procedimiento",
         descripcion:
             "El sistema presenta las operaciones de cada posición para que puedas comprobar cómo se obtuvo cada resultado.",
         icono: "＝",
-        imagen: "img/tutorial/paso5.png"
+        imagen: "IMG/tutorial/paso5.png"
     },
     {
         titulo: "Ver el resultado y limpiar",
         descripcion:
             "Consulta la matriz final. Cuando quieras comenzar desde cero, presiona Limpiar y crea una nueva operación.",
         icono: "✓",
-        imagen: "img/tutorial/paso6.png"
+        imagen: "IMG/tutorial/paso6.png"
     }
 ];
 

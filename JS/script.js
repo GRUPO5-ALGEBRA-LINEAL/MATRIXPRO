@@ -1,3 +1,4 @@
+
 /* ==================================================
    MATRIXCALC - LÓGICA PRINCIPAL
    ================================================== */
@@ -444,9 +445,7 @@ function mostrarPaso() {
         pasoActual === 1;
 
     document.getElementById("btnSiguiente").textContent =
-        pasoActual === tutorial.length
-            ? "Volver al inicio ↺"
-            : "Siguiente →";
+        pasoActual === tutorial.length ? "Volver al inicio ↺" : "Siguiente →";
 
     const imagen = document.getElementById("imagenTutorial");
     const visual = document.getElementById("tutorialVisual");
@@ -455,7 +454,6 @@ function mostrarPaso() {
     visual.hidden = false;
     imagen.alt = paso.titulo;
 
-    // Si la imagen falla, se conserva el indicador visual alternativo.
     imagen.onerror = function() {
         imagen.hidden = true;
         visual.hidden = false;
@@ -466,7 +464,6 @@ function mostrarPaso() {
         visual.hidden = true;
     };
 
-    // IMPORTANTE: la carpeta se llama IMG, en mayúsculas.
     imagen.src = paso.imagen;
 }
 
@@ -488,21 +485,22 @@ function pasoAnterior() {
 }
 
 /* ==================================================
+   PRECARGA DE IMÁGENES DEL TUTORIAL
+   ================================================== */
+
+function precargarImagenesTutorial() {
+    tutorial.forEach(function(paso) {
+        const imagenPrecargada = new Image();
+        imagenPrecargada.src = paso.imagen;
+    });
+}
+
+precargarImagenesTutorial();
+
+/* ==================================================
    INICIALIZACIÓN
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", function() {
     mostrarPaso();
 });
-/* ==================================================
-   PRECARGAR LAS IMÁGENES DEL TUTORIAL
-   ================================================== */
-
-function precargarImagenesTutorial() {
-    tutorial.forEach(function(paso) {
-        const imagen = new Image();
-        imagen.src = paso.imagen;
-    });
-}
-
-precargarImagenesTutorial();
